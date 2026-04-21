@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 페이지를 찾을 수 없습니다 | 코어드랩</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2A38D6;
+            --text-black: #111;
+            --bg-color: #fafafa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-black); 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+        }
+
+        /* 배경 흐르는 타이포그래피 (기존 디자인 계승) */
+        .bg-flow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            width: 150vw;
+            z-index: 1;
+            opacity: 0.05;
+            pointer-events: none;
+            user-select: none;
+        }
+        .flow-line {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 15vw;
+            font-weight: 900;
+            white-space: nowrap;
+            line-height: 1;
+            color: var(--primary-blue);
+        }
+
+        /* 메인 컨텐츠 */
+        .error-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .error-code {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: clamp(8rem, 20vw, 15rem);
+            font-weight: 900;
+            line-height: 0.8;
+            color: var(--primary-blue);
+            letter-spacing: -5px;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-black);
+        }
+
+        .error-desc {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* 메인으로 돌아가기 버튼 */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: var(--primary-blue);
+            color: #fff;
+            text-decoration: none;
+            font-family: 'GmarketSans', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 20px rgba(42, 56, 214, 0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(42, 56, 214, 0.3);
+        }
+
+        .back-btn span {
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover span {
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .error-message { font-size: 1.2rem; }
+            .error-desc { font-size: 0.9rem; padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-flow">
+        <div class="flow-line">PAGE NOT FOUND 404 ERROR</div>
+        <div class="flow-line" style="margin-left: -20vw;">LOST IN CORED LAB SPACE</div>
+        <div class="flow-line">PAGE NOT FOUND 404 ERROR</div>
+    </div>
+
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <p class="error-message">길을 잃으신 것 같아요.</p>
+        <p class="error-desc">찾으시는 페이지가 삭제되었거나, 주소가 잘못되었습니다.<br>아래 버튼을 눌러 안전하게 메인으로 돌아가세요.</p>
+        
+        <a href="/index" class="back-btn">
+            <span>&larr;</span> 메인 페이지로 돌아가기
+        </a>
+    </div>
+
+</body>
+</html>
