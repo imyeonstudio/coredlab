@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로젝트 의뢰 | Contact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #ffffff; color: #1a1a1a; }
+        .step-container { display: none; }
+        .step-container.active { display: block; animation: fadeIn 0.5s ease-out; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .type-card {
+            border: 2px solid #f3f4f6;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .type-card:hover { border-color: #3b82f6; transform: translateY(-4px); }
+        .type-card.selected { border-color: #3b82f6; background-color: #eff6ff; }
+        /* 선택 시 숫자 색상 변경 */
+        .type-card.selected .num-icon { background-color: #3b82f6; color: white; }
+        .num-icon { transition: all 0.3s; }
+
+        .sentence-input {
+            border-bottom: 2px solid #e5e7eb;
+            transition: border-color 0.3s;
+            outline: none;
+            padding: 2px 8px;
+            text-align: center;
+        }
+        .sentence-input:focus { border-color: #3b82f6; }
+
+        /* 제작 경험 버튼 스타일 */
+        .exp-btn {
+            border: 1px solid #e5e7eb;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: white;
+        }
+        .exp-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        /* 드롭다운 애니메이션 */
+        .dropdown-menu {
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .dropdown-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-next { background-color: #2563eb; color: white; padding: 1rem 3rem; border-radius: 9999px; font-weight: 700; transition: transform 0.2s; }
+        .btn-next:hover { transform: scale(1.05); background-color: #1d4ed8; }
+    </style>
+</head>
+<body class="bg-gray-50/50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-4xl w-full bg-white rounded-[3rem] shadow-2xl shadow-blue-100/50 p-8 md:p-16 relative overflow-hidden">
+        
+        <div class="flex gap-4 mb-12 border-l-2 border-gray-100 pl-6">
+            <div id="dot1" class="text-sm font-bold transition-colors duration-300 text-blue-600">01 STEP</div>
+            <div id="dot2" class="text-sm font-bold transition-colors duration-300 text-gray-300">02 STEP</div>
+        </div>
+
+        <form id="contactForm">
+            <div id="step1" class="step-container active">
+                <h2 class="text-4xl font-bold mb-2">STEP 1.</h2>
+                <p class="text-gray-500 mb-10">제작하시려는 홈페이지의 유형을 정해주세요.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <div class="type-card p-8 rounded-3xl" onclick="selectType('랜딩형', this)">
+                        <div class="num-icon w-12 h-12 bg-gray-100 rounded-2xl mb-6 flex items-center justify-center text-gray-400 font-bold">01</div>
+                        <h3 class="text-xl font-bold mb-3">랜딩형 홈페이지</h3>
+                        <p class="text-sm text-gray-500 leading-relaxed">검색 엔진 및 광고 등을 경유하여 접속자가 최초로 보게 되는 일자 형태의 웹페이지 유형</p>
+                    </div>
+                    <div class="type-card p-8 rounded-3xl" onclick="selectType('브랜드형', this)">
+                        <div class="num-icon w-12 h-12 bg-gray-100 rounded-2xl mb-6 flex items-center justify-center text-gray-400 font-bold">02</div>
+                        <h3 class="text-xl font-bold mb-3">브랜드형 홈페이지</h3>
+                        <p class="text-sm text-gray-500 leading-relaxed">브랜드 아이덴티티가 잘 드러날 수 있게끔 다양한 페이지로 구성된 형태의 유형</p>
+                    </div>
+                </div>
+                <input type="hidden" id="homepageType" required>
+
+                <div class="text-right">
+                    <button type="button" onclick="nextStep(2)" class="btn-next">다음 단계로 →</button>
+                </div>
+            </div>
+
+            <div id="step2" class="step-container pb-32">
+                <h2 class="text-4xl font-bold mb-2">STEP 2.</h2>
+                <p class="text-gray-500 mb-10">필수 항목을 포함한 항목을 입력해주세요.</p>
+
+                <div class="space-y-12 text-lg md:text-2xl font-medium leading-[3.5rem] mb-12">
+                    <div>
+                        저는 <input type="text" id="company" class="sentence-input w-40 md:w-64" placeholder="회사명" required> 의 
+                        <input type="text" id="name" class="sentence-input w-32 md:w-48" placeholder="성함" required> 입니다.
+                    </div>
+                    <div>
+                        연락처는 <input type="tel" id="tel" class="sentence-input w-64 md:w-80" placeholder="010-0000-0000" required> 입니다.
+                    </div>
+                    <div>
+                        홈페이지 제작 경험이 
+                        <button type="button" onclick="selectExp('없습니다', this)" class="exp-btn mx-1 active">없습니다</button>
+                        <button type="button" onclick="selectExp('있습니다', this)" class="exp-btn mx-1">있습니다</button>
+                        <input type="hidden" id="experience" value="없습니다">
+                    </div>
+                    <div>
+                        프로젝트 희망 기간은 <input type="text" id="period" class="sentence-input w-48 md:w-72" placeholder="예상 프로젝트 희망기간"> 입니다.
+                    </div>
+                    <div class="relative inline-block">
+                        제작 예산은 
+                        <div class="inline-block relative">
+                            <button type="button" id="budgetBtn" onclick="toggleDropdown()" class="sentence-input min-w-[120px] text-blue-600 font-bold focus:border-blue-600 outline-none">
+                                미정
+                            </button>
+                            <input type="hidden" id="budget" value="미정">
+                            
+                            <div id="budgetMenu" class="dropdown-menu absolute left-0 top-full mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 overflow-hidden">
+                                <div class="p-2 space-y-1">
+                                    <button type="button" onclick="selectBudget('미정')" class="w-full text-left px-4 py-3 text-sm hover:bg-blue-50 rounded-xl transition-colors">미정</button>
+                                    <button type="button" onclick="selectBudget('30만원')" class="w-full text-left px-4 py-3 text-sm hover:bg-blue-50 rounded-xl transition-colors">Mini (30만원)</button>
+                                    <button type="button" onclick="selectBudget('50만원')" class="w-full text-left px-4 py-3 text-sm hover:bg-blue-50 rounded-xl transition-colors">Lite (50만원)</button>
+                                    <button type="button" onclick="selectBudget('89만원')" class="w-full text-left px-4 py-3 text-sm hover:bg-blue-50 rounded-xl transition-colors">Business (89만원)</button>
+                                    <button type="button" onclick="selectBudget('150만원')" class="w-full text-left px-4 py-3 text-sm hover:bg-blue-50 rounded-xl transition-colors">Premium (150만원)</button>
+                                </div>
+                            </div>
+                        </div>
+                        입니다.
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-20">
+                    <button type="button" onclick="nextStep(1)" class="text-gray-400 font-bold hover:text-gray-600">← 이전으로</button>
+                    <button type="submit" id="submitBtn" class="btn-next">제출하기</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "7cbb43acef7fabda7bab284b317b06c2c56a4c39",
+            authDomain: "imyeontest.firebaseapp.com",
+            projectId: "imyeontest",
+            storageBucket: "imyeontest.firebasestorage.app",
+            appId: "1:55529187023:web:de07ae1f7ce459e36079ba"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 경험 선택 함수
+        window.selectExp = (val, el) => {
+            document.querySelectorAll('.exp-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('experience').value = val;
+        };
+
+        window.toggleDropdown = () => {
+            document.getElementById('budgetMenu').classList.toggle('show');
+        };
+
+        window.selectBudget = (value) => {
+            document.getElementById('budgetBtn').innerText = value;
+            document.getElementById('budget').value = value;
+            document.getElementById('budgetMenu').classList.remove('show');
+        };
+
+        window.addEventListener('click', (e) => {
+            if (!e.target.matches('#budgetBtn')) {
+                const menu = document.getElementById('budgetMenu');
+                if (menu?.classList.contains('show')) menu.classList.remove('show');
+            }
+        });
+
+        window.nextStep = (step) => {
+            if (step === 2 && !document.getElementById('homepageType').value) {
+                alert('홈페이지 유형을 선택해주세요!');
+                return;
+            }
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+            document.getElementById('dot1').className = step === 1 ? 'text-sm font-bold text-blue-600' : 'text-sm font-bold text-gray-300';
+            document.getElementById('dot2').className = step === 2 ? 'text-sm font-bold text-blue-600' : 'text-sm font-bold text-gray-300';
+        };
+
+        window.selectType = (type, el) => {
+            document.querySelectorAll('.type-card').forEach(card => card.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('homepageType').value = type;
+        };
+
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "전송 중...";
+
+            const formData = {
+                type: document.getElementById('homepageType').value,
+                company: document.getElementById('company').value,
+                name: document.getElementById('name').value,
+                tel: document.getElementById('tel').value,
+                experience: document.getElementById('experience').value,
+                period: document.getElementById('period').value,
+                budget: document.getElementById('budget').value,
+                status: "신규",
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                await addDoc(collection(db, "requests"), formData);
+                alert('성공적으로 접수되었습니다!');
+                location.reload();
+            } catch (error) {
+                alert('오류가 발생했습니다.');
+                btn.disabled = false;
+                btn.innerText = "제출하기";
+            }
+        });
+    </script>
+</body>
+</html>
