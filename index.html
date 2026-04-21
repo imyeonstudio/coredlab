@@ -23,14 +23,14 @@
         /* [현대적인 타이포그래피 흐르는 배경 - 가시성 강화] */
         .modern-bg {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100dvh; /* vh -> dvh 변경 */
+            top: 0; left: 0; width: 100vw; height: 100dvh;
             z-index: -1;
             overflow: hidden;
             background: #fafafa;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 5dvh; /* vh -> dvh 변경 */
+            gap: 5dvh;
             pointer-events: none;
         }
         
@@ -39,7 +39,6 @@
             font-size: 12vw;
             font-weight: 900;
             color: transparent;
-            /* 테두리를 진하게 주어 가시성 확보 */
             -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.15);
             white-space: nowrap;
             line-height: 1;
@@ -48,13 +47,13 @@
         
         .moving-type-bg.reverse {
             animation: scrollTextRev 45s linear infinite;
-            -webkit-text-stroke: 1.5px rgba(42, 56, 214, 0.25); /* 블루 포인트 테두리 */
+            -webkit-text-stroke: 1.5px rgba(42, 56, 214, 0.25);
         }
 
         @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes scrollTextRev { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
 
-        /* [헤더 스타일 - 스크롤 숨김/나타남 적용] */
+        /* [헤더 스타일] */
         header { 
             display: flex; justify-content: space-between; align-items: center; 
             padding: 30px 5vw; position: fixed; width: 100%; top: 0; z-index: 100; 
@@ -71,7 +70,7 @@
         nav a.highlight { color: var(--primary-blue); }
 
         /* [섹션 1 스타일] */
-        .hero-section { height: 100dvh; /* vh -> dvh 변경 */ display: flex; align-items: center; padding: 0 10vw; position: relative; z-index: 1; }
+        .hero-section { height: 100dvh; display: flex; align-items: center; padding: 0 10vw; position: relative; z-index: 1; }
         .left-content { display: flex; gap: 50px; position: relative; z-index: 10; width: 60%; }
         .pagination { display: flex; flex-direction: column; gap: 30px; font-size: 14px; font-weight: 600; color: var(--text-gray); margin-top: 20px; }
         .pagination .step { transition: all 0.3s ease; }
@@ -83,7 +82,6 @@
         .title-text.animate { animation: revealStagger 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .text-blue { color: var(--primary-blue); }
         
-        /* 오른쪽 영어 배경 텍스트 가시성 강화 */
         .right-content { position: absolute; right: 5vw; top: 50%; transform: translateY(-50%); font-size: 8rem; font-weight: 900; line-height: 0.85; letter-spacing: -5px; color: transparent; -webkit-text-stroke: 3px rgba(0, 0, 0, 0.1); z-index: 1; text-align: right; }
         .bg-text-line { overflow: hidden; display: block; }
         .bg-text-inner { display: inline-block; transform: translateY(100%); opacity: 0; }
@@ -93,15 +91,14 @@
         @keyframes revealUp { 0% { transform: translateY(100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
 
         /* [섹션 2: 줌인 및 양옆 세로 타이포그래피] */
-        .masking-section { height: 200dvh; /* vh -> dvh 변경 */ position: relative; z-index: 2; background: linear-gradient(to bottom, transparent, #fff 10%); }
-        .sticky-wrapper { position: sticky; top: 0; height: 100dvh; /* vh -> dvh 변경 */ display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; background: #fff; }
+        .masking-section { height: 200dvh; position: relative; z-index: 2; background: linear-gradient(to bottom, transparent, #fff 10%); }
+        .sticky-wrapper { position: sticky; top: 0; height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; background: #fff; }
         
         .masking-container { position: absolute; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 10; pointer-events: none; }
         .masking-text { font-family: 'GmarketSans', sans-serif; font-size: 18vw; font-weight: 900; line-height: 1; color: var(--primary-blue); text-align: center; transform-origin: center center; will-change: transform, opacity; }
 
-        /* 양옆 세로 루프 텍스트 */
         .side-vertical-text {
-            position: absolute; top: 0; height: 100dvh; /* vh -> dvh 변경 */ width: 100px;
+            position: absolute; top: 0; height: 100dvh; width: 100px;
             display: flex; align-items: center; justify-content: center; overflow: hidden;
             opacity: 0; transition: opacity 1s ease; z-index: 1; pointer-events: none;
         }
@@ -109,9 +106,11 @@
         .side-vertical-text.left { left: 3vw; }
         .side-vertical-text.right { right: 3vw; }
         
+        /* 세로 마퀴 루프 수정 (gap 제거, 완벽 루프) */
         .vertical-track {
-            display: flex; gap: 80px; font-family: 'GmarketSans', sans-serif; font-size: 8rem; font-weight: 900; color: rgba(42, 56, 214, 0.1); -webkit-text-stroke: 2px var(--primary-blue); white-space: nowrap; writing-mode: vertical-rl; text-orientation: mixed;
+            display: flex; font-family: 'GmarketSans', sans-serif; font-size: 8rem; font-weight: 900; color: rgba(42, 56, 214, 0.1); -webkit-text-stroke: 2px var(--primary-blue); white-space: nowrap; writing-mode: vertical-rl; text-orientation: mixed;
         }
+        .vertical-track span { margin-bottom: 80px; display: inline-block; } /* gap 대신 margin 적용 */
         .vertical-track.up { animation: marqueeVerticalUp 15s linear infinite; transform: rotate(180deg); }
         .vertical-track.down { animation: marqueeVerticalDown 15s linear infinite; }
 
@@ -130,7 +129,6 @@
         /* [섹션 3: 포트폴리오] */
         .portfolio-section { position: relative; z-index: 3; background-color: #fff; padding: 150px 5vw; }
         .section-header { display: flex; align-items: center; gap: 20px; margin-bottom: 80px; overflow: hidden; }
-        /* PROJECT 색상 파란색 */
         .section-label { font-family: 'GmarketSans', sans-serif; font-size: 3rem; font-weight: 900; letter-spacing: -1px; color: var(--primary-blue); }
         .section-header .line { flex: 1; height: 2px; background: var(--primary-blue); transform: scaleX(0); transform-origin: left; transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
         .section-header.is-visible .line { transform: scaleX(1); }
@@ -139,7 +137,6 @@
         .port-item { cursor: pointer; opacity: 0; transform: translateY(80px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         .port-item.is-visible { opacity: 1; transform: translateY(0); }
 
-        /* 이미지 비율 조정 4/3 */
         .port-img-box { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; }
         .port-img { width: 100%; height: 100%; background-size: cover !important; background-position: center !important; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
         .port-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(42, 56, 214, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s ease; backdrop-filter: blur(5px); }
@@ -154,7 +151,7 @@
         .port-info h4 { font-family: 'GmarketSans', sans-serif; font-size: 24px; font-weight: 700; transition: color 0.3s ease; }
         .port-info p { color: var(--text-gray); font-size: 15px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* [섹션 4: 클라이언트 (로고 무한 스크롤)] */
+        /* [섹션 4: 클라이언트 (로고 무한 스크롤 수정 - 완벽 루프)] */
         .clients-section {
             background-color: var(--primary-blue); color: #fff; padding: 150px 0; overflow: hidden; position: relative; z-index: 3;
         }
@@ -163,14 +160,15 @@
         .clients-header p { font-size: 1.2rem; font-weight: 500; opacity: 0.9; }
 
         .marquee-wrapper { width: 100vw; overflow: hidden; margin-bottom: 25px; }
-        .marquee-track { display: flex; gap: 25px; width: max-content; }
+        .marquee-track { display: flex; width: max-content; } /* gap 제거 */
         .marquee-track.left { animation: marqueeLeft 30s linear infinite; }
         .marquee-track.right { animation: marqueeRight 30s linear infinite; }
 
-        /* 로고 플레이스홀더 (화이트 박스 + 파란 글씨) */
+        /* 로고 플레이스홀더 */
         .client-box {
             width: 280px; height: 100px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center;
             font-family: 'GmarketSans', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--primary-blue); box-shadow: 0 10px 30px rgba(0,0,0,0.15); flex-shrink: 0;
+            margin-right: 25px; /* gap 대신 개별 margin 부여 */
         }
 
         @keyframes marqueeLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -183,27 +181,37 @@
         .footer-info span { margin: 0 15px; display: inline-block; }
 
         @media (max-width: 768px) {
-            .title-line { font-size: 2.8rem; word-break: keep-all; } /* 단어 단위로 줄바꿈 되도록 추가 */
+            .title-line { font-size: 2.8rem; word-break: keep-all; } 
             .masking-text { font-size: 25vw; } 
             nav { gap: 20px; } 
             nav a { font-size: 15px; } 
-            .desc-line { font-size: 1.1rem; word-break: keep-all; } /* 단어 단위로 줄바꿈 되도록 추가 */
+            .desc-line { font-size: 1.1rem; word-break: keep-all; } 
             .section-label { font-size: 2rem; } 
             .portfolio-grid { grid-template-columns: 1fr; }
             .client-box { width: 220px; height: 80px; font-size: 1.1rem; } 
             .clients-header h2 { font-size: 3rem; }
 
-            /* [모바일 레이아웃 최적화 추가] */
-            .left-content { width: 100%; } /* 너비 60% 제한을 풀어서 글자가 세로로 심하게 찌그러지는 현상 해결 */
-            .right-content { font-size: 5rem; right: 2vw; } /* 배경 영어 텍스트 사이즈 모바일에 맞게 조정 */
+            .left-content { width: 100%; }
+            .right-content { font-size: 5rem; right: 2vw; }
             
-            /* 섹션 2 양옆 세로 텍스트가 가운데 본문을 침범하지 않도록 여백/크기 최적화 */
             .side-vertical-text { width: 40px; }
             .side-vertical-text.left { left: 1vw; }
             .side-vertical-text.right { right: 1vw; }
-            .vertical-track { font-size: 4rem; gap: 40px; }
+            .vertical-track { font-size: 4rem; }
+            .vertical-track span { margin-bottom: 40px; } /* 모바일에서는 여백 축소 */
             
-            .content-after-zoom { padding: 0 30px; } /* 가운데 본문 안전 여백 확보 */
+            .content-after-zoom { padding: 0 30px; }
+
+            /* ✅ 모바일 폰트 가시성 및 두께 강화 (레티나 디스플레이 및 iOS Faux-bold 대응) */
+            .moving-type-bg { -webkit-text-stroke: 3px rgba(0, 0, 0, 0.15); }
+            .moving-type-bg.reverse { -webkit-text-stroke: 3px rgba(42, 56, 214, 0.25); }
+            .right-content { -webkit-text-stroke: 4px rgba(0, 0, 0, 0.12); }
+            .vertical-track { -webkit-text-stroke: 3.5px var(--primary-blue); }
+
+            /* 얇아보이는 영문 폰트(GmarketSans)에 텍스트 그림자를 미세하게 줘서 두께감 보강 */
+            .masking-text, .section-label, .clients-header h2, .client-box, .port-info h4 {
+                text-shadow: 0.5px 0 0 currentColor, -0.5px 0 0 currentColor;
+            }
         }
     </style>
 </head>
@@ -242,10 +250,12 @@
             <div class="side-vertical-text left" id="v-text-left">
                 <div class="vertical-track up">
                     <span>DETAIL</span><span>DETAIL</span><span>DETAIL</span><span>DETAIL</span><span>DETAIL</span><span>DETAIL</span>
+                    <span>DETAIL</span><span>DETAIL</span><span>DETAIL</span><span>DETAIL</span><span>DETAIL</span><span>DETAIL</span>
                 </div>
             </div>
             <div class="side-vertical-text right" id="v-text-right">
                 <div class="vertical-track down">
+                    <span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span>
                     <span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span><span>CORED LAB</span>
                 </div>
             </div>
@@ -270,7 +280,7 @@
         </div>
         
         <div class="portfolio-grid">
-            <div class="port-item scroll-reveal">
+            <a href="https://atomatrix.co.kr/" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
                 <div class="port-img-box">
                     <div class="port-img" style="background: url('https://res.cloudinary.com/duxrmfdh5/image/upload/v1776666921/%EC%A0%9C%EB%AA%A9%EC%9D%84_%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94._fen0af.png');"></div>
                     <div class="port-overlay"><span>VIEW PROJECT</span></div>
@@ -279,8 +289,8 @@
                     <h4>아토매트릭스</h4>
                     <p>회사 홈페이지 제작</p>
                 </div>
-            </div>
-            <div class="port-item scroll-reveal">
+            </a>
+            <a href="https://imyeonstudio.kro.kr" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
                 <div class="port-img-box">
                     <div class="port-img" style="background: url('https://res.cloudinary.com/duxrmfdh5/image/upload/v1776666920/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-001_mv5l9z.png');"></div>
                     <div class="port-overlay"><span>VIEW PROJECT</span></div>
@@ -289,8 +299,8 @@
                     <h4>이면 디자인 스튜디오</h4>
                     <p>회사 홈페이지 제작</p>
                 </div>
-            </div>
-            <div class="port-item scroll-reveal">
+            </a>
+            <a href="#" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
                 <div class="port-img-box">
                     <div class="port-img" style="background: url('https://res.cloudinary.com/duxrmfdh5/image/upload/v1776667774/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-001_1_qqoyvb.png');"></div>
                     <div class="port-overlay"><span>VIEW PROJECT</span></div>
@@ -299,7 +309,7 @@
                     <h4>프로젝트 제작중</h4>
                     <p>기업의 홈페이지 제작</p>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -311,6 +321,15 @@
         
         <div class="marquee-wrapper">
             <div class="marquee-track left">
+                <div class="client-box">디자인 스튜디오 이면</div>
+                <div class="client-box">아토매트릭스</div>
+                <div class="client-box">우리은행</div>
+                <div class="client-box">국민은행</div>
+                <div class="client-box">동궁찜닭</div>
+                <div class="client-box">halff COFFEE</div>
+                <div class="client-box">NEW YORK BURGER</div>
+                <div class="client-box">북창동 순두부</div>
+                <div class="client-box">카페, 만월경</div>
                 <div class="client-box">디자인 스튜디오 이면</div>
                 <div class="client-box">아토매트릭스</div>
                 <div class="client-box">우리은행</div>
@@ -335,6 +354,16 @@
                 <div class="client-box">동궁찜닭</div>
                 <div class="client-box">halff COFFEE</div>
                 <div class="client-box">NEW YORK BURGER</div>
+                <div class="client-box">북창동 순두부</div>
+                <div class="client-box">카페, 만월경</div>
+                <div class="client-box">동궁찜닭</div>
+                <div class="client-box">halff COFFEE</div>
+                <div class="client-box">NEW YORK BURGER</div>
+                <div class="client-box">북창동 순두부</div>
+                <div class="client-box">카페, 만월경</div>
+                <div class="client-box">동궁찜닭</div>
+                <div class="client-box">halff COFFEE</div>
+                <div class="client-box">NEW YORK BURGER</div>
             </div>
         </div>
     </section>
@@ -348,9 +377,8 @@
     </footer>
 
     <script>
-        // [1] Lenis 라이브러리를 활용한 빙판 미끄러지듯 부드러운 스크롤 (관성 스크롤)
         const lenis = new Lenis({
-            duration: 1.5, // 숫자가 클수록 더 오래 미끄러집니다 (여운)
+            duration: 1.5, 
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             gestureDirection: 'vertical',
@@ -367,7 +395,6 @@
         }
         requestAnimationFrame(raf);
 
-        // [2] 슬라이드 데이터 & 챠라락 애니메이션
         const slides = [
             { lines: [{ text: "모든 환경에", highlight: true }, { text: "최적화된", highlight: false }, { text: "웹사이트", highlight: false }], bgText: ["WEB", "SITE"] },
             { lines: [{ text: "브랜드의", highlight: true }, { text: "가치를 높이는", highlight: false }, { text: "디자인", highlight: false }], bgText: ["CREA", "TIVE"] },
@@ -425,20 +452,17 @@
 
         renderSlide(currentIndex);
 
-        // [3] 헤더 숨김/표시 및 타이포그래피 줌인 애니메이션 연동
         const header = document.getElementById('main-header');
         
         lenis.on('scroll', (e) => {
             const scrollPos = window.scrollY;
             
-            // 1. 헤더 로직: 첫 번째 섹션(100vh)을 조금 벗어나면 위로 올리기
             if (scrollPos > window.innerHeight * 0.3) {
                 header.classList.add('hide-header');
             } else {
                 header.classList.remove('hide-header');
             }
 
-            // 2. 섹션 2 줌인 및 양옆 세로 텍스트 로직
             const maskingSection = document.querySelector('.masking-section');
             const maskingText = document.querySelector('.masking-text');
             const descLines = document.querySelectorAll('.desc-line');
@@ -463,7 +487,6 @@
                 maskingText.style.transform = `scale(${scale})`;
                 maskingText.style.opacity = Math.max(0, textOpacity);
                 
-                // 디테일 텍스트가 나타나는 시점(0.65 이상)에 양옆 세로 타이포그래피도 스윽 나타남
                 if (progress > 0.65) {
                     descLines.forEach(line => line.classList.add('show'));
                     vTextLeft.classList.add('show');
@@ -485,7 +508,6 @@
             }
         });
 
-        // [4] 포트폴리오 스크롤 애니메이션 (Intersection Observer)
         const observerOptions = {
             root: null,
             rootMargin: "0px",
