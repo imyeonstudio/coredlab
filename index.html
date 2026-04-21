@@ -23,14 +23,14 @@
         /* [현대적인 타이포그래피 흐르는 배경 - 가시성 강화] */
         .modern-bg {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100dvh; /* vh -> dvh 변경 */
             z-index: -1;
             overflow: hidden;
             background: #fafafa;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 5vh;
+            gap: 5dvh; /* vh -> dvh 변경 */
             pointer-events: none;
         }
         
@@ -71,7 +71,7 @@
         nav a.highlight { color: var(--primary-blue); }
 
         /* [섹션 1 스타일] */
-        .hero-section { height: 100vh; display: flex; align-items: center; padding: 0 10vw; position: relative; z-index: 1; }
+        .hero-section { height: 100dvh; /* vh -> dvh 변경 */ display: flex; align-items: center; padding: 0 10vw; position: relative; z-index: 1; }
         .left-content { display: flex; gap: 50px; position: relative; z-index: 10; width: 60%; }
         .pagination { display: flex; flex-direction: column; gap: 30px; font-size: 14px; font-weight: 600; color: var(--text-gray); margin-top: 20px; }
         .pagination .step { transition: all 0.3s ease; }
@@ -93,15 +93,15 @@
         @keyframes revealUp { 0% { transform: translateY(100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
 
         /* [섹션 2: 줌인 및 양옆 세로 타이포그래피] */
-        .masking-section { height: 200vh; position: relative; z-index: 2; background: linear-gradient(to bottom, transparent, #fff 10%); }
-        .sticky-wrapper { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; background: #fff; }
+        .masking-section { height: 200dvh; /* vh -> dvh 변경 */ position: relative; z-index: 2; background: linear-gradient(to bottom, transparent, #fff 10%); }
+        .sticky-wrapper { position: sticky; top: 0; height: 100dvh; /* vh -> dvh 변경 */ display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; background: #fff; }
         
         .masking-container { position: absolute; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 10; pointer-events: none; }
         .masking-text { font-family: 'GmarketSans', sans-serif; font-size: 18vw; font-weight: 900; line-height: 1; color: var(--primary-blue); text-align: center; transform-origin: center center; will-change: transform, opacity; }
 
         /* 양옆 세로 루프 텍스트 */
         .side-vertical-text {
-            position: absolute; top: 0; height: 100vh; width: 100px;
+            position: absolute; top: 0; height: 100dvh; /* vh -> dvh 변경 */ width: 100px;
             display: flex; align-items: center; justify-content: center; overflow: hidden;
             opacity: 0; transition: opacity 1s ease; z-index: 1; pointer-events: none;
         }
@@ -183,9 +183,27 @@
         .footer-info span { margin: 0 15px; display: inline-block; }
 
         @media (max-width: 768px) {
-            .title-line { font-size: 2.8rem; } .masking-text { font-size: 25vw; } nav { gap: 20px; } nav a { font-size: 15px; } .desc-line { font-size: 1.1rem; }
-            .section-label { font-size: 2rem; } .portfolio-grid { grid-template-columns: 1fr; }
-            .client-box { width: 220px; height: 80px; font-size: 1.1rem; } .clients-header h2 { font-size: 3rem; }
+            .title-line { font-size: 2.8rem; word-break: keep-all; } /* 단어 단위로 줄바꿈 되도록 추가 */
+            .masking-text { font-size: 25vw; } 
+            nav { gap: 20px; } 
+            nav a { font-size: 15px; } 
+            .desc-line { font-size: 1.1rem; word-break: keep-all; } /* 단어 단위로 줄바꿈 되도록 추가 */
+            .section-label { font-size: 2rem; } 
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .client-box { width: 220px; height: 80px; font-size: 1.1rem; } 
+            .clients-header h2 { font-size: 3rem; }
+
+            /* [모바일 레이아웃 최적화 추가] */
+            .left-content { width: 100%; } /* 너비 60% 제한을 풀어서 글자가 세로로 심하게 찌그러지는 현상 해결 */
+            .right-content { font-size: 5rem; right: 2vw; } /* 배경 영어 텍스트 사이즈 모바일에 맞게 조정 */
+            
+            /* 섹션 2 양옆 세로 텍스트가 가운데 본문을 침범하지 않도록 여백/크기 최적화 */
+            .side-vertical-text { width: 40px; }
+            .side-vertical-text.left { left: 1vw; }
+            .side-vertical-text.right { right: 1vw; }
+            .vertical-track { font-size: 4rem; gap: 40px; }
+            
+            .content-after-zoom { padding: 0 30px; } /* 가운데 본문 안전 여백 확보 */
         }
     </style>
 </head>
