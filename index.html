@@ -180,7 +180,7 @@
         .footer-info { font-size: 15px; color: var(--text-gray); line-height: 1.8; font-weight: 500; }
         .footer-info span { margin: 0 15px; display: inline-block; }
 
-        @media (max-width: 768px) {
+@media (max-width: 768px) {
             .title-line { font-size: 2.8rem; word-break: keep-all; } 
             .masking-text { font-size: 25vw; } 
             nav { gap: 20px; } 
@@ -198,19 +198,27 @@
             .side-vertical-text.left { left: 1vw; }
             .side-vertical-text.right { right: 1vw; }
             .vertical-track { font-size: 4rem; }
-            .vertical-track span { margin-bottom: 40px; } /* 모바일에서는 여백 축소 */
+            .vertical-track span { margin-bottom: 40px; } 
             
             .content-after-zoom { padding: 0 30px; }
 
-            /* ✅ 모바일 폰트 가시성 및 두께 강화 (레티나 디스플레이 및 iOS Faux-bold 대응) */
-            .moving-type-bg { -webkit-text-stroke: 3px rgba(0, 0, 0, 0.15); }
-            .moving-type-bg.reverse { -webkit-text-stroke: 3px rgba(42, 56, 214, 0.25); }
-            .right-content { -webkit-text-stroke: 4px rgba(0, 0, 0, 0.12); }
-            .vertical-track { -webkit-text-stroke: 3.5px var(--primary-blue); }
-
-            /* 얇아보이는 영문 폰트(GmarketSans)에 텍스트 그림자를 미세하게 줘서 두께감 보강 */
-            .masking-text, .section-label, .clients-header h2, .client-box, .port-info h4 {
-                text-shadow: 0.5px 0 0 currentColor, -0.5px 0 0 currentColor;
+            /* ✅ 변경된 부분: 억지로 넣은 테두리와 그림자 효과(text-stroke, text-shadow) 삭제 */
+            /* GmarketSans의 최대 지원 굵기인 700(Bold)으로 맞춰 Faux-bold(글자 뭉개짐) 현상 원천 해결 */
+            .moving-type-bg,
+            .masking-text,
+            .vertical-track,
+            .section-label,
+            .clients-header h2,
+            .client-box,
+            .port-info h4,
+            .footer-logo {
+                font-weight: 700 !important;
+            }
+            
+            /* 폰트 안티앨리어싱 적용: 모바일에서 글자가 훨씬 선명하고 뚜렷하게 보이도록 보정 */
+            * {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
             }
         }
     </style>
@@ -280,7 +288,7 @@
         </div>
         
         <div class="portfolio-grid">
-            <a href="https://atomatrix.co.kr/" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
+            <a href="https://www.google.com" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
                 <div class="port-img-box">
                     <div class="port-img" style="background: url('https://res.cloudinary.com/duxrmfdh5/image/upload/v1776666921/%EC%A0%9C%EB%AA%A9%EC%9D%84_%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94._fen0af.png');"></div>
                     <div class="port-overlay"><span>VIEW PROJECT</span></div>
@@ -290,7 +298,7 @@
                     <p>회사 홈페이지 제작</p>
                 </div>
             </a>
-            <a href="https://imyeonstudio.kro.kr" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
+            <a href="https://www.google.com" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
                 <div class="port-img-box">
                     <div class="port-img" style="background: url('https://res.cloudinary.com/duxrmfdh5/image/upload/v1776666920/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-001_mv5l9z.png');"></div>
                     <div class="port-overlay"><span>VIEW PROJECT</span></div>
@@ -300,7 +308,7 @@
                     <p>회사 홈페이지 제작</p>
                 </div>
             </a>
-            <a href="#" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
+            <a href="https://www.google.com" target="_blank" class="port-item scroll-reveal" style="text-decoration:none; color:inherit; display:block;">
                 <div class="port-img-box">
                     <div class="port-img" style="background: url('https://res.cloudinary.com/duxrmfdh5/image/upload/v1776667774/%EC%A0%9C%EB%AA%A9%EC%9D%84-%EC%9E%85%EB%A0%A5%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94_-001_1_qqoyvb.png');"></div>
                     <div class="port-overlay"><span>VIEW PROJECT</span></div>
