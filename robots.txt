@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin/       # 관리자 페이지 접근 금지
+Disallow: /temp/        # 임시 폴더 접근 금지
+Allow: /                # 나머지는 모두 허용
+
+Sitemap: https://coredlab/sitemap.xml
