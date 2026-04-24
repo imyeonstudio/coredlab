@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문의 접수 완료 - 코어드랩</title>
+    <meta name="description" content="코어드랩 문의가 정상적으로 접수되었습니다. 확인 후 빠르게 연락드리겠습니다.">
+    <meta property="og:title" content="문의 접수 완료 - 코어드랩">
+    <meta property="og:description" content="코어드랩 문의가 정상적으로 접수되었습니다.">
+    <meta property="og:image" content="https://res.cloudinary.com/duxrmfdh5/image/upload/v1776820266/IMG_7869_jflg8v.png">
+    <meta property="og:url" content="https://coredlab.cloud/thanks">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="코어드랩">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://coredlab.cloud/thanks">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
+    <link rel="icon" href="https://coredlab.cloud/favicon.ico?v=2" type="image/x-icon">
+    <link rel="shortcut icon" href="https://coredlab.cloud/favicon.ico?v=2" type="image/x-icon">
+
+    <!-- Google Analytics / Google Ads 전환 코드는 필요 시 여기에 삽입하세요. -->
+
+    <style>
+        :root {
+            --primary-blue: #2A38D6;
+            --text-black: #111;
+            --text-gray: #777;
+            --line-gray: #e9e9e9;
+            --bg-soft: #fafafa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', sans-serif; }
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        body { min-height: 100svh; background: #fff; color: var(--text-black); overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+        .modern-bg {
+            position: fixed; inset: 0; z-index: -2; overflow: hidden; background: var(--bg-soft);
+            display: flex; flex-direction: column; justify-content: center; gap: 7vh; pointer-events: none;
+        }
+        .moving-type-bg {
+            font-family: 'GmarketSans', sans-serif; font-size: 12vw; font-weight: 900;
+            color: transparent; -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.12);
+            white-space: nowrap; line-height: 1; animation: scrollText 42s linear infinite;
+        }
+        .moving-type-bg.reverse { animation: scrollTextRev 48s linear infinite; -webkit-text-stroke: 1.5px rgba(42, 56, 214, 0.22); }
+        @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes scrollTextRev { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 50;
+            display: flex; justify-content: space-between; align-items: center; padding: 30px 5vw;
+        }
+        .header-left, .header-right { flex: 1; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--primary-blue); letter-spacing: -1px; }
+        nav { display: flex; justify-content: center; gap: 50px; }
+        nav a { text-decoration: none; color: var(--text-black); font-family: 'GmarketSans', sans-serif; font-size: 18px; font-weight: 700; transition: opacity 0.3s ease, color 0.3s ease; }
+        nav a:hover { opacity: 0.6; }
+        nav a.highlight { color: var(--primary-blue); }
+
+        main { min-height: 100svh; display: flex; align-items: center; padding: 80px 5vw 80px; position: relative; }
+        .thanks-wrap { width: 100%; display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 70px; align-items: center; position: relative; z-index: 2; }
+
+        .giant-type { position: relative; min-height: 520px; display: flex; align-items: center; isolation: isolate; }
+        .giant-type::marker { display: none; }
+        .giant-type .type-shield { display: none; }
+        .giant-type::selection { background: transparent; }
+        .giant-type::before,
+        .giant-type::after {
+            z-index: 2;
+        }
+        .giant-type::marker {
+            content: "";
+        }
+        .giant-type > span {
+            display: none;
+        }
+        .giant-type::backdrop {
+            display: none;
+        }
+        .giant-type .dummy {
+            display: none;
+        }
+        .giant-type-bg-shield {
+            position: absolute;
+            inset: 7% -4% 3% -7%;
+            z-index: 1;
+            background: radial-gradient(circle at 36% 50%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.86) 36%, rgba(255,255,255,0.42) 64%, rgba(255,255,255,0) 82%);
+            filter: blur(2px);
+            pointer-events: none;
+        }
+        .giant-type::before {
+            content: "THANK"; position: absolute; left: 0.6vw; top: 48%; transform: translateY(-53%);
+            font-family: 'GmarketSans', sans-serif; font-size: clamp(6rem, 14vw, 15rem); font-weight: 900;
+            letter-spacing: -0.09em; line-height: 0.82; color: rgba(255, 255, 255, 0.42); -webkit-text-stroke: 3px rgba(42, 56, 214, 0.46); text-shadow: 0 18px 60px rgba(42, 56, 214, 0.16); pointer-events: none;
+        }
+        .giant-type::after {
+            content: "YOU"; position: absolute; left: 4vw; top: 52%; transform: translateY(16%);
+            font-family: 'GmarketSans', sans-serif; font-size: clamp(6rem, 14vw, 15rem); font-weight: 900;
+            letter-spacing: -0.09em; line-height: 0.82; color: var(--primary-blue); pointer-events: none;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(42, 56, 214, 0.20);
+            padding: 52px; box-shadow: 0 30px 90px rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); position: relative; overflow: hidden;
+        }
+        .status-card::before {
+            content: "RECEIVED"; position: absolute; right: -16px; bottom: -18px;
+            font-family: 'GmarketSans', sans-serif; font-size: clamp(4rem, 9vw, 9rem); font-weight: 900;
+            color: transparent; -webkit-text-stroke: 1px rgba(42, 56, 214, 0.12); line-height: 1; pointer-events: none;
+        }
+        .kicker { font-family: 'GmarketSans', sans-serif; font-size: 14px; font-weight: 900; letter-spacing: 0.16em; color: var(--primary-blue); margin-bottom: 24px; }
+        h1 { font-family: 'GmarketSans', sans-serif; font-size: clamp(2.7rem, 5vw, 5.8rem); font-weight: 900; letter-spacing: -0.08em; line-height: 0.96; margin-bottom: 30px; }
+        h1 span { color: var(--primary-blue); }
+        .desc { max-width: 620px; font-size: 1.12rem; font-weight: 600; line-height: 1.9; color: #333; word-break: keep-all; margin-bottom: 38px; position: relative; z-index: 2; }
+
+        .info-list { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--primary-blue); border-bottom: 1px solid var(--line-gray); margin-bottom: 36px; position: relative; z-index: 2; }
+        .info-item { padding: 22px 18px; border-right: 1px solid var(--line-gray); }
+        .info-item:last-child { border-right: 0; }
+        .info-label { display: block; font-family: 'GmarketSans', sans-serif; font-size: 12px; font-weight: 900; letter-spacing: 0.08em; color: var(--primary-blue); margin-bottom: 10px; }
+        .info-value { display: block; font-size: 0.98rem; font-weight: 700; line-height: 1.45; word-break: keep-all; }
+
+        .button-row { display: flex; gap: 12px; position: relative; z-index: 2; }
+        .btn { min-width: 180px; height: 62px; padding: 0 28px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; font-family: 'GmarketSans', sans-serif; font-size: 1rem; font-weight: 900; transition: transform 0.25s ease, opacity 0.25s ease; }
+        .btn-primary { background: var(--primary-blue); color: #fff; }
+        .btn-secondary { background: #fff; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+        .btn:hover { transform: translateY(-4px); opacity: 0.92; }
+        .small-note { margin-top: 26px; color: #777; font-size: 0.92rem; font-weight: 600; line-height: 1.7; word-break: keep-all; position: relative; z-index: 2; }
+
+
+        /* [THANKS PAGE ANIMATION] */
+        body {
+            animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .moving-type-bg {
+            will-change: transform;
+        }
+
+        .giant-type-bg-shield {
+            opacity: 0;
+            transform: scale(0.92);
+            animation: shieldReveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+        }
+
+        .giant-type::before {
+            opacity: 0;
+            transform: translateY(-43%) translateX(-46px) rotate(-2deg);
+            animation: thankReveal 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+        }
+
+        .giant-type::after {
+            opacity: 0;
+            transform: translateY(30%) translateX(42px) rotate(2deg);
+            animation: youReveal 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.38s forwards, youFloat 5.6s ease-in-out 1.55s infinite;
+        }
+
+        .status-card {
+            opacity: 0;
+            transform: translateY(44px) scale(0.975);
+            animation: cardReveal 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.58s forwards;
+        }
+
+        .status-card::before {
+            opacity: 0;
+            transform: translateY(28px);
+            animation: receivedReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.05s forwards;
+        }
+
+        .kicker,
+        h1,
+        .desc,
+        .info-list,
+        .button-row {
+            opacity: 0;
+            transform: translateY(22px);
+            animation: contentReveal 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .kicker { animation-delay: 0.86s; }
+        h1 { animation-delay: 0.98s; }
+        .desc { animation-delay: 1.10s; }
+        .info-list { animation-delay: 1.22s; }
+        .button-row { animation-delay: 1.34s; }
+
+        .info-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-item::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-blue);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: lineGrow 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1.45s forwards;
+        }
+
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.26), transparent);
+            transform: skewX(-18deg);
+            animation: buttonShine 3.2s ease-in-out 2.1s infinite;
+        }
+
+        .btn-primary {
+            box-shadow: 0 18px 40px rgba(42, 56, 214, 0.22);
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes shieldReveal {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes thankReveal {
+            to {
+                opacity: 1;
+                transform: translateY(-53%) translateX(0) rotate(0deg);
+            }
+        }
+
+        @keyframes youReveal {
+            to {
+                opacity: 1;
+                transform: translateY(16%) translateX(0) rotate(0deg);
+            }
+        }
+
+        @keyframes youFloat {
+            0%, 100% { transform: translateY(16%) translateX(0) rotate(0deg); }
+            50% { transform: translateY(10%) translateX(0) rotate(0deg); }
+        }
+
+        @keyframes cardReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes receivedReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes contentReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes lineGrow {
+            to { transform: scaleX(1); }
+        }
+
+        @keyframes buttonShine {
+            0% { left: -120%; }
+            34%, 100% { left: 130%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .thanks-wrap { grid-template-columns: 1fr; gap: 20px; }
+            .giant-type { min-height: 240px; }
+            .giant-type::before, .giant-type::after { font-size: clamp(5rem, 20vw, 9rem); }
+            .giant-type::after { left: 10vw; }
+        }
+        @media (max-width: 768px) {
+            header { padding: 24px 5vw; }
+            .logo { font-size: 22px; letter-spacing: -1.2px; }
+            nav { gap: 18px; }
+            nav a { font-size: 14px; letter-spacing: -0.04em; }
+            main { padding: 64px 6vw 56px; align-items: flex-start; }
+            .moving-type-bg { font-size: 18vw; font-weight: 900; -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.14); }
+            .moving-type-bg.reverse { -webkit-text-stroke: 1.2px rgba(42, 56, 214, 0.24); }
+            .giant-type { min-height: 220px; }
+            .giant-type::before, .giant-type::after { letter-spacing: -0.1em; line-height: 0.82; }
+            .giant-type::before { left: -1vw; -webkit-text-stroke: 2px rgba(42, 56, 214, 0.42); color: rgba(255, 255, 255, 0.45); }
+            .giant-type-bg-shield { inset: 6% -10% 2% -12%; background: radial-gradient(circle at 35% 50%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.86) 42%, rgba(255,255,255,0.36) 70%, rgba(255,255,255,0) 88%); }
+            .giant-type::after { left: 8vw; }
+            .status-card { padding: 34px 28px; }
+            .kicker { font-size: 12px; margin-bottom: 20px; }
+            h1 { font-size: clamp(3rem, 13vw, 4.6rem); line-height: 0.94; letter-spacing: -0.095em; margin-bottom: 26px; }
+            .desc { font-size: 1.02rem; line-height: 1.85; font-weight: 700; margin-bottom: 32px; }
+            .info-list { grid-template-columns: 1fr; }
+            .info-item { border-right: 0; border-bottom: 1px solid var(--line-gray); padding: 18px 0; }
+            .info-item:last-child { border-bottom: 0; }
+            .button-row { flex-direction: column; }
+            .btn { width: 100%; height: 60px; }
+            .status-card::before { font-size: 5.8rem; right: -12px; bottom: -12px; }
+        }
+        @media (max-width: 420px) {
+            .header-left, .header-right { flex: none; }
+            header { gap: 20px; }
+            nav { margin-left: auto; }
+            .giant-type { min-height: 190px; }
+            .status-card { padding: 32px 24px; }
+            h1 { font-size: clamp(2.85rem, 15vw, 4rem); }
+        }
+    </style>
+</head>
+<body>
+    <div class="modern-bg" aria-hidden="true">
+        <div class="moving-type-bg">TYPOGRAPHY DESIGN CREATIVE LAB TYPOGRAPHY DESIGN CREATIVE LAB</div>
+        <div class="moving-type-bg reverse">PROJECT RECEIVED CORED LAB PROJECT RECEIVED CORED LAB</div>
+        <div class="moving-type-bg">MODERN INTERFACE WEB EXPERIENCE MODERN INTERFACE WEB EXPERIENCE</div>
+    </div>
+
+
+    <main>
+        <section class="thanks-wrap" aria-label="문의 접수 완료">
+            <div class="giant-type" aria-hidden="true"><div class="giant-type-bg-shield"></div></div>
+            <article class="status-card">
+                <p class="kicker">REQUEST RECEIVED</p>
+                <h1>문의가<br><span>접수</span>되었습니다.</h1>
+                <p class="desc">
+                    남겨주신 내용을 확인한 뒤, 코어드랩이 빠르게 연락드리겠습니다.
+                </p>
+                <div class="info-list">
+                    <div class="info-item"><span class="info-label">CHECK</span><span class="info-value">문의 내용 확인</span></div>
+                    <div class="info-item"><span class="info-label">CONTACT</span><span class="info-value">순차적으로 연락</span></div>
+                    <div class="info-item"><span class="info-label">PROPOSAL</span><span class="info-value">방향성 제안</span></div>
+                </div>
+                <div class="button-row">
+                    <a href="/" class="btn btn-primary">홈으로 돌아가기</a>
+                </div>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
