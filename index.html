@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>코어드랩 - 전문 웹 에이전시</title>
-    <meta name="description" content="코어드랩(Cored Lab)은 최신 기술 스택을 바탕으로 빠르고 확장성 있는 웹 서비스를 구축합니다">
+    <meta name="description" content="코어드랩(Cored Lab)은 브랜드 소개, 문의 전환, 모바일 최적화에 집중한 웹사이트를 제작합니다">
     <meta property="og:title" content="코어드랩 - 전문 웹 에이전시">
-    <meta property="og:description" content="코어드랩(Cored Lab)은 최신 기술 스택을 바탕으로 빠르고 확장성 있는 웹 서비스를 구축합니다">
+    <meta property="og:description" content="코어드랩(Cored Lab)은 브랜드 소개, 문의 전환, 모바일 최적화에 집중한 웹사이트를 제작합니다">
     <meta property="og:image" content="https://res.cloudinary.com/duxrmfdh5/image/upload/v1776820266/IMG_7869_jflg8v.png">
     <meta property="og:url" content="https://coredlab.cloud/">
     <meta property="og:type" content="website">
@@ -117,7 +117,20 @@
         .sticky-wrapper { position: sticky; top: 0; height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; background: #fff; }
         
         .masking-container { position: absolute; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 10; pointer-events: none; }
-        .masking-text { font-family: 'GmarketSans', sans-serif; font-size: 18vw; font-weight: 900; line-height: 1; color: var(--primary-blue); text-align: center; transform-origin: center center; will-change: transform, opacity; }
+        .masking-text { 
+            font-family: 'GmarketSans', sans-serif; 
+            font-size: 18vw; 
+            font-weight: 900; 
+            line-height: 1; 
+            color: var(--primary-blue); 
+            text-align: center; 
+            transform-origin: center center; 
+            will-change: transform, opacity; 
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0, 0, 0) scale(1);
+            contain: paint;
+        }
 
         .side-vertical-text {
             position: absolute; top: 0; height: 100dvh; width: 100px;
@@ -196,6 +209,250 @@
         @keyframes marqueeLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes marqueeRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
 
+
+
+        /* [섹션 4: 전환 설계 제안 - 타이포그래피 카드] */
+        .strategy-section {
+            position: relative;
+            z-index: 3;
+            background: #fff;
+            padding: 150px 5vw 40px;
+            overflow: hidden;
+        }
+        .strategy-section::before {
+            content: "CONVERSION";
+            position: absolute;
+            top: 40px;
+            right: -4vw;
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 12vw;
+            font-weight: 900;
+            line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(42, 56, 214, 0.12);
+            pointer-events: none;
+        }
+        .strategy-intro {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 60px;
+            align-items: end;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 2;
+        }
+        .strategy-kicker {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            letter-spacing: 0.16em;
+            margin-bottom: 18px;
+        }
+        .strategy-title {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: clamp(2.6rem, 6vw, 6.8rem);
+            font-weight: 900;
+            letter-spacing: -0.08em;
+            line-height: 0.95;
+        }
+        .strategy-title span {
+            color: var(--primary-blue);
+        }
+        .strategy-copy {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.9;
+            word-break: keep-all;
+            color: #333;
+        }
+        .strategy-copy strong {
+            color: var(--primary-blue);
+            font-weight: 900;
+        }
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            position: relative;
+            z-index: 2;
+        }
+        .value-card {
+            min-height: 300px;
+            border: 1px solid #e9e9e9;
+            background: #fff;
+            padding: 34px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(80px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+        }
+        .value-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .value-card:hover {
+            border-color: var(--primary-blue);
+        }
+        .value-card::after {
+            content: attr(data-num);
+            position: absolute;
+            right: -8px;
+            bottom: -28px;
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 9rem;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1.5px rgba(42, 56, 214, 0.22);
+            line-height: 1;
+        }
+        .value-card h4 {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1.25;
+            margin-bottom: 24px;
+        }
+        .value-card p {
+            color: #555;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.8;
+            word-break: keep-all;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* [섹션 5: 제작 방식] */
+        .process-section {
+            position: relative;
+            z-index: 3;
+            background: #fff;
+            padding: 110px 5vw 150px;
+        }
+        .process-wrap {
+            border-top: 3px solid var(--primary-blue);
+        }
+        .process-row {
+            display: grid;
+            grid-template-columns: 170px 1fr 1.2fr;
+            gap: 30px;
+            align-items: center;
+            padding: 34px 0;
+            border-bottom: 1px solid #e8e8e8;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .process-row.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .process-num {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--primary-blue);
+        }
+        .process-name {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+        }
+        .process-desc {
+            color: #555;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.8;
+            word-break: keep-all;
+        }
+
+        /* [섹션 6: 상담 CTA] */
+        .cta-section {
+            position: relative;
+            z-index: 3;
+            background: var(--primary-blue);
+            color: #fff;
+            padding: 150px 5vw;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: "START A PROJECT";
+            position: absolute;
+            left: -2vw;
+            bottom: -2vw;
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 10vw;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .cta-inner {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .cta-title {
+            font-family: 'GmarketSans', sans-serif;
+            font-size: clamp(3rem, 7vw, 7.5rem);
+            font-weight: 900;
+            letter-spacing: -0.08em;
+            line-height: 0.95;
+            margin-bottom: 30px;
+        }
+        .cta-copy {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.9;
+            opacity: 0.92;
+            word-break: keep-all;
+            max-width: 720px;
+        }
+        .cta-panel {
+            background: #fff;
+            color: var(--text-black);
+            padding: 38px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+        }
+        .cta-panel p {
+            font-size: 1rem;
+            color: #555;
+            font-weight: 600;
+            line-height: 1.8;
+            word-break: keep-all;
+        }
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 64px;
+            background: var(--primary-blue);
+            color: #fff;
+            text-decoration: none;
+            font-family: 'GmarketSans', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 900;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-4px);
+            opacity: 0.92;
+        }
+
         /* [푸터] */
         footer { background: #fff; padding: 100px 5vw 50px; text-align: center; position: relative; z-index: 3; border-top: 1px solid #eee; }
         .footer-logo { font-family: 'GmarketSans', sans-serif; font-size: 2rem; font-weight: 900; color: var(--primary-blue); margin-bottom: 30px; }
@@ -242,7 +499,394 @@
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
             }
+
+            .strategy-section { padding: 110px 5vw 30px; }
+            .strategy-intro { grid-template-columns: 1fr; gap: 30px; margin-bottom: 50px; }
+            .strategy-title { letter-spacing: -0.06em; }
+            .strategy-copy { font-size: 1rem; }
+            .value-grid { grid-template-columns: 1fr; }
+            .value-card { min-height: 250px; padding: 28px; }
+            .value-card h4 { font-size: 1.4rem; }
+            .process-section { padding: 80px 5vw 110px; }
+            .process-row { grid-template-columns: 1fr; gap: 12px; padding: 28px 0; }
+            .process-num { font-size: 2.6rem; }
+            .process-name { font-size: 1.25rem; }
+            .cta-section { padding: 110px 5vw; }
+            .cta-inner { grid-template-columns: 1fr; gap: 40px; }
+            .cta-panel { padding: 28px; }
         }
+
+
+        /* =========================================================
+           [MOBILE TONE FIX]
+           데스크톱에서 느껴지는 두꺼운 타이포그래피 톤을 모바일에서도 유지하기 위한 보정
+           기존 모바일 미디어쿼리 뒤에 배치하여 얇아지는 font-weight 문제를 덮어씁니다.
+        ========================================================= */
+        @media (max-width: 768px) {
+            html {
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+            }
+
+            body {
+                background: #fff;
+            }
+
+            * {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-synthesis: weight;
+            }
+
+            /* 모바일에서 700으로 낮아지던 굵기를 다시 데스크톱 톤에 맞춤 */
+            .logo,
+            nav a,
+            .moving-type-bg,
+            .masking-text,
+            .vertical-track,
+            .section-label,
+            .clients-header h2,
+            .client-box,
+            .port-info h4,
+            .strategy-kicker,
+            .strategy-title,
+            .value-card h4,
+            .process-num,
+            .process-name,
+            .cta-title,
+            .cta-button,
+            .footer-logo {
+                font-family: 'GmarketSans', 'Pretendard', sans-serif !important;
+                font-weight: 900 !important;
+            }
+
+            .desc-line,
+            .strategy-copy,
+            .value-card p,
+            .process-desc,
+            .cta-copy,
+            .cta-panel p,
+            .footer-info {
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+
+            header {
+                padding: 24px 5vw;
+            }
+
+            .logo {
+                font-size: 22px;
+                letter-spacing: -1.2px;
+            }
+
+            nav {
+                gap: 18px;
+            }
+
+            nav a {
+                font-size: 14px;
+                letter-spacing: -0.04em;
+            }
+
+            .hero-section {
+                min-height: 100svh;
+                height: 100svh;
+                padding: 0 6vw;
+            }
+
+            .left-content {
+                gap: 24px;
+                width: 100%;
+                align-items: flex-start;
+            }
+
+            .pagination {
+                gap: 22px;
+                margin-top: 12px;
+                font-size: 13px;
+                font-weight: 800;
+            }
+
+            .title-line {
+                font-size: clamp(3rem, 13vw, 4.6rem);
+                line-height: 1.08;
+                letter-spacing: -0.075em;
+                font-weight: 900;
+            }
+
+            .right-content {
+                right: 4vw;
+                top: 55%;
+                font-size: clamp(5.5rem, 25vw, 8rem);
+                line-height: 0.82;
+                letter-spacing: -0.08em;
+                -webkit-text-stroke: 2px rgba(0, 0, 0, 0.1);
+                opacity: 0.9;
+            }
+
+            .moving-type-bg {
+                font-size: 18vw;
+                -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.16);
+            }
+
+            .moving-type-bg.reverse {
+                -webkit-text-stroke: 1.2px rgba(42, 56, 214, 0.25);
+            }
+
+            .masking-section {
+                height: 210svh;
+            }
+
+            .sticky-wrapper {
+                height: 100svh;
+            }
+
+            .masking-text {
+                font-size: 28vw;
+                letter-spacing: -0.08em;
+                text-shadow: none;
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+
+            .content-after-zoom {
+                gap: 16px;
+                padding: 0 7vw;
+            }
+
+            .desc-line {
+                font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+                line-height: 1.65;
+                word-break: keep-all;
+            }
+
+            .side-vertical-text {
+                width: 46px;
+            }
+
+            .vertical-track {
+                font-size: 4.8rem;
+                -webkit-text-stroke: 1.4px var(--primary-blue);
+                color: rgba(42, 56, 214, 0.08);
+            }
+
+            .portfolio-section,
+            .strategy-section,
+            .process-section,
+            .cta-section {
+                padding-left: 6vw;
+                padding-right: 6vw;
+            }
+
+            .portfolio-section {
+                padding-top: 120px;
+                padding-bottom: 120px;
+            }
+
+            .section-header {
+                gap: 14px;
+                margin-bottom: 56px;
+            }
+
+            .section-label {
+                font-size: clamp(2.3rem, 10vw, 3.4rem);
+                letter-spacing: -0.075em;
+                line-height: 0.95;
+            }
+
+            .portfolio-grid {
+                gap: 58px;
+            }
+
+            .port-img-box {
+                aspect-ratio: 1 / 1.05;
+            }
+
+            .port-info {
+                margin-top: 22px;
+            }
+
+            .port-info h4 {
+                font-size: 1.5rem;
+                letter-spacing: -0.04em;
+            }
+
+            .port-info p {
+                font-size: 0.86rem;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+            }
+
+            .strategy-section {
+                padding-top: 120px;
+                padding-bottom: 50px;
+            }
+
+            .strategy-section::before {
+                top: 72px;
+                right: -30vw;
+                font-size: 24vw;
+                -webkit-text-stroke: 1px rgba(42, 56, 214, 0.13);
+            }
+
+            .strategy-intro {
+                gap: 34px;
+                margin-bottom: 50px;
+            }
+
+            .strategy-kicker {
+                font-size: 12px;
+                letter-spacing: 0.14em;
+                margin-bottom: 18px;
+            }
+
+            .strategy-title {
+                font-size: clamp(3.4rem, 15vw, 5.7rem);
+                line-height: 0.92;
+                letter-spacing: -0.095em;
+            }
+
+            .strategy-copy {
+                font-size: 1.04rem;
+                line-height: 1.9;
+                color: #242424;
+            }
+
+            .value-grid {
+                gap: 16px;
+            }
+
+            .value-card {
+                min-height: 260px;
+                padding: 30px 28px;
+                border-color: rgba(42, 56, 214, 0.16);
+                box-shadow: 0 24px 70px rgba(0, 0, 0, 0.045);
+            }
+
+            .value-card::after {
+                font-size: 8rem;
+                -webkit-text-stroke: 1.3px rgba(42, 56, 214, 0.24);
+            }
+
+            .value-card h4 {
+                font-size: 1.6rem;
+                line-height: 1.2;
+            }
+
+            .value-card p {
+                font-size: 0.98rem;
+                line-height: 1.8;
+            }
+
+            .process-section {
+                padding-top: 86px;
+                padding-bottom: 120px;
+            }
+
+            .process-wrap {
+                border-top-width: 2px;
+            }
+
+            .process-row {
+                gap: 10px;
+                padding: 30px 0;
+            }
+
+            .process-num {
+                font-size: 3rem;
+                -webkit-text-stroke: 1.4px var(--primary-blue);
+                line-height: 1;
+            }
+
+            .process-name {
+                font-size: 1.45rem;
+                letter-spacing: -0.055em;
+            }
+
+            .process-desc {
+                font-size: 0.98rem;
+                line-height: 1.8;
+            }
+
+            .cta-section {
+                padding-top: 120px;
+                padding-bottom: 120px;
+            }
+
+            .cta-section::before {
+                left: -20vw;
+                bottom: 8vw;
+                font-size: 20vw;
+                -webkit-text-stroke: 1px rgba(255,255,255,0.22);
+            }
+
+            .cta-title {
+                font-size: clamp(3.45rem, 15vw, 5.8rem);
+                line-height: 0.92;
+                letter-spacing: -0.1em;
+                margin-bottom: 28px;
+            }
+
+            .cta-copy {
+                font-size: 1.03rem;
+                line-height: 1.9;
+            }
+
+            .cta-panel {
+                min-height: 270px;
+                padding: 30px 28px;
+                box-shadow: 0 26px 70px rgba(0,0,0,0.22);
+            }
+
+            .cta-button {
+                height: 62px;
+                font-size: 1rem;
+            }
+
+            footer {
+                padding: 80px 6vw 44px;
+            }
+
+            .footer-logo {
+                font-size: 2.2rem;
+                letter-spacing: -0.06em;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .title-line {
+                font-size: clamp(2.72rem, 14vw, 3.6rem);
+            }
+
+            .left-content {
+                gap: 18px;
+            }
+
+            .pagination {
+                font-size: 12px;
+                gap: 18px;
+            }
+
+            .right-content {
+                font-size: 5.6rem;
+                opacity: 0.78;
+            }
+
+            .desc-line {
+                font-size: 1.08rem;
+                line-height: 1.7;
+            }
+
+            .strategy-title,
+            .cta-title {
+                font-size: clamp(3.05rem, 15.5vw, 4.7rem);
+            }
+
+            .value-card {
+                padding: 28px 24px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -344,57 +988,84 @@
         </div>
     </section>
 
-    <section class="clients-section">
-        <div class="clients-header scroll-reveal">
-            <h2>CLIENT</h2>
-            <p>우리와 함께 하고 있는 고객사입니다.</p>
+    <section class="strategy-section">
+        <div class="section-header scroll-reveal">
+            <h3 class="section-label">WHY</h3>
+            <div class="line"></div>
         </div>
-        
-        <div class="marquee-wrapper">
-            <div class="marquee-track left">
-                <div class="client-box">디자인 스튜디오 이면</div>
-                <div class="client-box">아토매트릭스</div>
-                <div class="client-box">우리은행</div>
-                <div class="client-box">국민은행</div>
-                <div class="client-box">동궁찜닭</div>
-                <div class="client-box">halff COFFEE</div>
-                <div class="client-box">NEW YORK BURGER</div>
-                <div class="client-box">북창동 순두부</div>
-                <div class="client-box">카페, 만월경</div>
-                <div class="client-box">디자인 스튜디오 이면</div>
-                <div class="client-box">아토매트릭스</div>
-                <div class="client-box">우리은행</div>
-                <div class="client-box">국민은행</div>
-                <div class="client-box">동궁찜닭</div>
-                <div class="client-box">halff COFFEE</div>
-                <div class="client-box">NEW YORK BURGER</div>
-                <div class="client-box">북창동 순두부</div>
-                <div class="client-box">카페, 만월경</div>
+
+        <div class="strategy-intro">
+            <div>
+                <p class="strategy-kicker">NOT JUST A WEBSITE</p>
+                <h2 class="strategy-title">문의로<br><span>이어지는</span><br>구조</h2>
+            </div>
+            <p class="strategy-copy">
+                예쁜 화면에서 끝나지 않도록, 고객이 들어온 순간부터 <strong>무엇을 보고, 어디를 누르고, 어떻게 문의할지</strong>까지 설계합니다.
+                코어드랩은 브랜드의 분위기와 실제 전환 흐름을 함께 만드는 웹 제작을 지향합니다.
+            </p>
+        </div>
+
+        <div class="value-grid">
+            <article class="value-card scroll-reveal" data-num="01">
+                <h4>첫 화면에서<br>업종을 이해하게</h4>
+                <p>방문자가 몇 초 안에 어떤 서비스를 제공하는지 이해하도록 핵심 문장, 대표 이미지, 문의 버튼의 우선순위를 정리합니다.</p>
+            </article>
+            <article class="value-card scroll-reveal" data-num="02">
+                <h4>모바일에서<br>막히지 않게</h4>
+                <p>대부분의 고객은 휴대폰으로 확인합니다. 작은 화면에서도 가격, 위치, 예약, 상담 버튼이 자연스럽게 이어지도록 구성합니다.</p>
+            </article>
+            <article class="value-card scroll-reveal" data-num="03">
+                <h4>관리 부담은<br>가볍게</h4>
+                <p>처음부터 복잡한 기능을 강요하지 않습니다. 현재 필요한 구조부터 만들고, 이후 운영 상황에 맞춰 확장할 수 있게 설계합니다.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="process-section">
+        <div class="section-header scroll-reveal">
+            <h3 class="section-label">FLOW</h3>
+            <div class="line"></div>
+        </div>
+
+        <div class="process-wrap">
+            <div class="process-row scroll-reveal">
+                <div class="process-num">01</div>
+                <div class="process-name">업종 분석</div>
+                <div class="process-desc">고객이 가장 많이 궁금해하는 정보와 문의 전환에 필요한 버튼을 먼저 정리합니다.</div>
+            </div>
+            <div class="process-row scroll-reveal">
+                <div class="process-num">02</div>
+                <div class="process-name">시안 제작</div>
+                <div class="process-desc">브랜드의 톤에 맞춰 첫 화면, 메뉴 구성, 스크롤 흐름을 시각적으로 확인할 수 있게 제작합니다.</div>
+            </div>
+            <div class="process-row scroll-reveal">
+                <div class="process-num">03</div>
+                <div class="process-name">수정 반영</div>
+                <div class="process-desc">대표님이 실제로 보여주고 싶은 내용과 고객에게 필요한 정보를 기준으로 문구와 구성을 다듬습니다.</div>
+            </div>
+            <div class="process-row scroll-reveal">
+                <div class="process-num">04</div>
+                <div class="process-name">배포 및 연결</div>
+                <div class="process-desc">도메인, 네이버/인스타 링크, 문의 페이지, 지도 연결까지 실제 고객이 접근할 수 있는 형태로 마무리합니다.</div>
             </div>
         </div>
-        
-        <div class="marquee-wrapper">
-            <div class="marquee-track right">
-                <div class="client-box">북창동 순두부</div>
-                <div class="client-box">카페, 만월경</div>
-                <div class="client-box">동궁찜닭</div>
-                <div class="client-box">halff COFFEE</div>
-                <div class="client-box">NEW YORK BURGER</div>
-                <div class="client-box">북창동 순두부</div>
-                <div class="client-box">카페, 만월경</div>
-                <div class="client-box">동궁찜닭</div>
-                <div class="client-box">halff COFFEE</div>
-                <div class="client-box">NEW YORK BURGER</div>
-                <div class="client-box">북창동 순두부</div>
-                <div class="client-box">카페, 만월경</div>
-                <div class="client-box">동궁찜닭</div>
-                <div class="client-box">halff COFFEE</div>
-                <div class="client-box">NEW YORK BURGER</div>
-                <div class="client-box">북창동 순두부</div>
-                <div class="client-box">카페, 만월경</div>
-                <div class="client-box">동궁찜닭</div>
-                <div class="client-box">halff COFFEE</div>
-                <div class="client-box">NEW YORK BURGER</div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-inner">
+            <div>
+                <h2 class="cta-title">작게 시작해도<br>제대로 보이게.</h2>
+                <p class="cta-copy">
+                    지금 필요한 건 거창한 기능보다, 고객이 신뢰하고 문의할 수 있는 명확한 첫 화면일 수 있습니다.
+                    코어드랩은 업종에 맞는 방향부터 함께 정리합니다.
+                </p>
+            </div>
+            <div class="cta-panel">
+                <p>
+                    홈페이지가 필요한지 아직 확신이 없어도 괜찮습니다.<br>
+                    현재 운영 방식과 필요한 목적을 남겨주시면, 어떤 형태가 맞을지 먼저 제안드립니다.
+                </p>
+                <a href="/contact" class="cta-button">의뢰 상담하기</a>
             </div>
         </div>
     </section>
@@ -409,7 +1080,7 @@
 
     <script>
         const lenis = new Lenis({
-            duration: 1.5, 
+            duration: 1.15, 
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             gestureDirection: 'vertical',
@@ -529,13 +1200,17 @@
                 }
 
             } else if (scrollPos < sectionTop) {
-                maskingText.style.transform = `scale(1)`;
+                maskingText.style.transform = `translate3d(0, 0, 0) scale(1)`;
                 maskingText.style.opacity = 1;
                 descLines.forEach(line => line.classList.remove('show'));
                 vTextLeft.classList.remove('show');
                 vTextRight.classList.remove('show');
             } else if (scrollPos > sectionTop + sectionHeight) {
+                maskingText.style.transform = `translate3d(0, 0, 0) scale(36)`;
+                maskingText.style.opacity = 0;
                 descLines.forEach(line => line.classList.add('show'));
+                vTextLeft.classList.add('show');
+                vTextRight.classList.add('show');
             }
         });
 
