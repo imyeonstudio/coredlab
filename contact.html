@@ -161,21 +161,6 @@
         </form>
     </div>
 
-    <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="successModalContent" class="bg-white rounded-[2rem] p-8 md:p-10 max-w-sm w-full mx-4 shadow-2xl text-center transform translate-y-8 transition-transform duration-300">
-            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">접수 완료!</h3>
-            <p class="text-gray-500 mb-8 leading-relaxed break-keep">성공적으로 프로젝트 의뢰가 접수되었습니다.<br>빠른 시일 내에 연락드리겠습니다.</p>
-            <button onclick="closeModalAndReload()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
-                확인
-            </button>
-        </div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -233,21 +218,7 @@
             el.classList.add('selected');
             document.getElementById('homepageType').value = type;
         };
-
-        // 모달 띄우기 함수
-        const showSuccessModal = () => {
-            const modal = document.getElementById('successModal');
-            const content = document.getElementById('successModalContent');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            content.classList.remove('translate-y-8');
-        };
-
-        // 모달 닫고 리로드 함수
-        window.closeModalAndReload = () => {
-            location.reload();
-        };
-
-        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
@@ -267,8 +238,7 @@
 
             try {
                 await addDoc(collection(db, "requests"), formData);
-                // alert 대신 예쁜 모달창 띄우기
-                showSuccessModal();
+                window.location.href = "/thanks.html";
             } catch (error) {
                 alert('오류가 발생했습니다.');
                 btn.disabled = false;
