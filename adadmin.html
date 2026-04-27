@@ -6,501 +6,81 @@
   <title>코어드랩 - 관리자 페이지</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://coredlab.cloud/favicon.ico?v=2" type="image/x-icon">
-  <link rel="shortcut icon" href="https://coredlab.cloud/favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-
+  <link rel="shortcut icon" href="https://coredlab.cloud/favicon.ico?v=2" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(59,130,246,0.08), transparent 30%),
-        radial-gradient(circle at top right, rgba(147,197,253,0.10), transparent 25%),
-        #f8fafc;
-      color: #0f172a;
-    }
-
-    .glass {
-      background: rgba(255,255,255,0.82);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,0.7);
-    }
-
-    .request-card {
-      transition: all .25s ease;
-    }
-
-    .request-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-    }
-
-    .fade-up {
-      animation: fadeUp .4s ease;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .status-badge {
-      padding: .45rem .8rem;
-      border-radius: 9999px;
-      font-size: .75rem;
-      font-weight: 700;
-      letter-spacing: -.01em;
-    }
-
-    .status-new {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .status-progress {
-      background: #fef3c7;
-      color: #b45309;
-    }
-
-    .status-done {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .status-hold {
-      background: #e5e7eb;
-      color: #475569;
-    }
-
-    .thin-scroll::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    .thin-scroll::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 9999px;
-    }
-
-    .thin-scroll::-webkit-scrollbar-track {
-      background: transparent;
-    }
+    body{font-family:'Noto Sans KR',sans-serif;background:radial-gradient(circle at top left,rgba(59,130,246,.09),transparent 30%),radial-gradient(circle at top right,rgba(147,197,253,.12),transparent 25%),#f8fafc;color:#0f172a}.glass{background:rgba(255,255,255,.84);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.72)}.request-card{transition:all .25s ease}.request-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(15,23,42,.08)}.fade-up{animation:fadeUp .35s ease}@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.status-badge{padding:.45rem .8rem;border-radius:9999px;font-size:.75rem;font-weight:800;letter-spacing:-.01em}.status-new,.status-pay-wait{background:#dbeafe;color:#1d4ed8}.status-progress,.status-pay-done{background:#fef3c7;color:#b45309}.status-done,.status-sent{background:#dcfce7;color:#15803d}.status-hold{background:#e5e7eb;color:#475569}.status-working{background:#ede9fe;color:#6d28d9}.thin-scroll::-webkit-scrollbar{width:8px;height:8px}.thin-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9999px}.thin-scroll::-webkit-scrollbar-track{background:transparent}
   </style>
 </head>
 <body class="min-h-screen px-4 py-6 md:px-8 md:py-10">
-
   <div class="max-w-7xl mx-auto">
-    <!-- Header -->
     <header class="glass rounded-[2rem] p-6 md:p-10 shadow-xl shadow-slate-200/40 mb-6 md:mb-8">
       <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <p class="text-sm font-bold tracking-[0.18em] text-blue-600 uppercase mb-3">Admin Dashboard</p>
-          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
-            Contact Request Archive
-          </h1>
-          <p class="mt-3 text-slate-500 text-sm md:text-base break-keep">
-             실시간으로 확인하는 관리자 페이지입니다.
-          </p>
+          <p class="text-sm font-black tracking-[0.18em] text-blue-600 uppercase mb-3">Admin Dashboard</p>
+          <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-tight">Coredlab Request Archive</h1>
+          <p class="mt-3 text-slate-500 text-sm md:text-base break-keep">문의 신청과 템플릿 구매 신청을 실시간으로 확인하고 상태를 변경합니다.</p>
         </div>
-
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full md:w-auto">
-          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]">
-            <p class="text-xs text-slate-400 font-bold mb-1">TOTAL</p>
-            <h2 id="totalCount" class="text-2xl md:text-3xl font-extrabold tracking-tight">0</h2>
-          </div>
-          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]">
-            <p class="text-xs text-slate-400 font-bold mb-1">NEW</p>
-            <h2 id="newCount" class="text-2xl md:text-3xl font-extrabold tracking-tight text-blue-600">0</h2>
-          </div>
-          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]">
-            <p class="text-xs text-slate-400 font-bold mb-1">PROGRESS</p>
-            <h2 id="progressCount" class="text-2xl md:text-3xl font-extrabold tracking-tight text-amber-600">0</h2>
-          </div>
-          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]">
-            <p class="text-xs text-slate-400 font-bold mb-1">DONE</p>
-            <h2 id="doneCount" class="text-2xl md:text-3xl font-extrabold tracking-tight text-emerald-600">0</h2>
-          </div>
+          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]"><p class="text-xs text-slate-400 font-bold mb-1">TOTAL</p><h2 id="totalCount" class="text-2xl md:text-3xl font-black tracking-tight">0</h2></div>
+          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]"><p class="text-xs text-slate-400 font-bold mb-1">CONTACT</p><h2 id="contactCount" class="text-2xl md:text-3xl font-black tracking-tight text-blue-600">0</h2></div>
+          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]"><p class="text-xs text-slate-400 font-bold mb-1">PURCHASE</p><h2 id="purchaseCount" class="text-2xl md:text-3xl font-black tracking-tight text-violet-600">0</h2></div>
+          <div class="glass rounded-2xl px-4 py-4 min-w-[120px]"><p class="text-xs text-slate-400 font-bold mb-1">WAITING</p><h2 id="waitingCount" class="text-2xl md:text-3xl font-black tracking-tight text-amber-600">0</h2></div>
         </div>
       </div>
     </header>
 
-    <!-- Controls -->
     <section class="glass rounded-[2rem] p-4 md:p-6 shadow-lg shadow-slate-200/30 mb-6">
       <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-          <div class="relative w-full sm:w-[280px]">
-            <input
-              id="searchInput"
-              type="text"
-              placeholder="회사명, 성함, 연락처 검색"
-              class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500"
-            />
-          </div>
-
-          <select
-            id="typeFilter"
-            class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500"
-          >
-            <option value="all">전체 유형</option>
-            <option value="랜딩형">랜딩형</option>
-            <option value="브랜드형">브랜드형</option>
-          </select>
-
-          <select
-            id="statusFilter"
-            class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500"
-          >
-            <option value="all">전체 상태</option>
-            <option value="신규">신규</option>
-            <option value="진행중">진행중</option>
-            <option value="완료">완료</option>
-            <option value="보류">보류</option>
-          </select>
+          <input id="searchInput" type="text" placeholder="회사명, 성함, 이메일, 연락처 검색" class="w-full sm:w-[320px] rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500" />
+          <select id="categoryFilter" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500"><option value="all">전체 유형</option><option value="contact">문의 신청</option><option value="purchase">구매 신청</option></select>
+          <select id="statusFilter" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500"><option value="all">전체 상태</option><option value="신규">신규</option><option value="진행중">진행중</option><option value="완료">완료</option><option value="보류">보류</option><option value="입금 확인중">입금 확인중</option><option value="입금 확인 완료">입금 확인 완료</option><option value="작업 중">작업 중</option><option value="전송완료">전송완료</option></select>
         </div>
-
-        <div class="flex items-center gap-3">
-          <button
-            id="sortBtn"
-            class="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-bold hover:opacity-90 transition"
-          >
-            최신순
-          </button>
-        </div>
+        <button id="sortBtn" class="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-bold hover:opacity-90 transition">최신순</button>
       </div>
     </section>
 
-    <!-- List -->
     <section class="grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-6">
-      <!-- Left: cards -->
       <div class="space-y-4" id="requestList"></div>
-
-      <!-- Right: detail -->
       <aside class="glass rounded-[2rem] p-5 md:p-6 shadow-lg shadow-slate-200/30 h-fit xl:sticky xl:top-6">
         <div class="flex items-center justify-between mb-5">
-          <div>
-            <p class="text-xs font-bold tracking-[0.16em] text-slate-400 uppercase mb-2">Selected Request</p>
-            <h3 class="text-2xl font-extrabold tracking-tight">상세 보기</h3>
-          </div>
-          <div id="liveDot" class="flex items-center gap-2 text-sm text-emerald-600 font-bold">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-            LIVE
-          </div>
+          <div><p class="text-xs font-black tracking-[0.16em] text-slate-400 uppercase mb-2">Selected Request</p><h3 class="text-2xl font-black tracking-tight">상세 보기</h3></div>
+          <div class="flex items-center gap-2 text-sm text-emerald-600 font-bold"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>LIVE</div>
         </div>
-
-        <div id="emptyDetail" class="rounded-3xl bg-slate-50 border border-dashed border-slate-200 p-8 text-center">
-          <p class="text-slate-400 text-sm">왼쪽 문의 카드를 선택하면 상세 내용이 표시됩니다.</p>
-        </div>
-
-        <div id="detailPanel" class="hidden">
-          <div class="mb-6">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <p id="detailType" class="text-sm font-bold text-blue-600 mb-2">유형</p>
-                <h4 id="detailCompany" class="text-3xl font-extrabold tracking-tight leading-tight">회사명</h4>
-                <p id="detailName" class="text-slate-500 mt-2 text-base">담당자명</p>
-              </div>
-              <div id="detailStatusBadge" class="status-badge status-new">신규</div>
-            </div>
-          </div>
-
-          <div class="space-y-4 mb-6">
-            <div class="rounded-2xl bg-slate-50 p-4">
-              <p class="text-xs text-slate-400 font-bold mb-1">연락처</p>
-              <p id="detailTel" class="text-base font-bold text-slate-800">-</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div class="rounded-2xl bg-slate-50 p-4">
-                <p class="text-xs text-slate-400 font-bold mb-1">제작 경험</p>
-                <p id="detailExp" class="text-base font-bold text-slate-800">-</p>
-              </div>
-              <div class="rounded-2xl bg-slate-50 p-4">
-                <p class="text-xs text-slate-400 font-bold mb-1">예산</p>
-                <p id="detailBudget" class="text-base font-bold text-slate-800">-</p>
-              </div>
-            </div>
-
-            <div class="rounded-2xl bg-slate-50 p-4">
-              <p class="text-xs text-slate-400 font-bold mb-1">희망 기간</p>
-              <p id="detailPeriod" class="text-base font-bold text-slate-800">-</p>
-            </div>
-
-            <div class="rounded-2xl bg-slate-50 p-4">
-              <p class="text-xs text-slate-400 font-bold mb-1">접수 시간</p>
-              <p id="detailDate" class="text-base font-bold text-slate-800">-</p>
-            </div>
-          </div>
-
-          <div>
-            <p class="text-sm font-bold text-slate-500 mb-3">상태 변경</p>
-            <div class="grid grid-cols-2 gap-3">
-              <button class="status-action rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700" data-status="신규">신규</button>
-              <button class="status-action rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-700" data-status="진행중">진행중</button>
-              <button class="status-action rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700" data-status="완료">완료</button>
-              <button class="status-action rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-bold text-slate-700" data-status="보류">보류</button>
-            </div>
-          </div>
-        </div>
+        <div id="emptyDetail" class="rounded-3xl bg-slate-50 border border-dashed border-slate-200 p-8 text-center"><p class="text-slate-400 text-sm">왼쪽 카드를 선택하면 상세 내용이 표시됩니다.</p></div>
+        <div id="detailPanel" class="hidden"></div>
       </aside>
     </section>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      query,
-      orderBy,
-      onSnapshot,
-      doc,
-      updateDoc
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "7cbb43acef7fabda7bab284b317b06c2c56a4c39",
-      authDomain: "imyeontest.firebaseapp.com",
-      projectId: "imyeontest",
-      storageBucket: "imyeontest.firebasestorage.app",
-      appId: "1:55529187023:web:de07ae1f7ce459e36079ba"
-    };
-
+    const firebaseConfig = { apiKey:"7cbb43acef7fabda7bab284b317b06c2c56a4c39", authDomain:"imyeontest.firebaseapp.com", projectId:"imyeontest", storageBucket:"imyeontest.firebasestorage.app", appId:"1:55529187023:web:de07ae1f7ce459e36079ba" };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const requestList = document.getElementById("requestList");
-    const searchInput = document.getElementById("searchInput");
-    const typeFilter = document.getElementById("typeFilter");
-    const statusFilter = document.getElementById("statusFilter");
-    const sortBtn = document.getElementById("sortBtn");
+    const requestList=document.getElementById('requestList'), detailPanel=document.getElementById('detailPanel'), emptyDetail=document.getElementById('emptyDetail');
+    const searchInput=document.getElementById('searchInput'), categoryFilter=document.getElementById('categoryFilter'), statusFilter=document.getElementById('statusFilter'), sortBtn=document.getElementById('sortBtn');
+    const totalCount=document.getElementById('totalCount'), contactCount=document.getElementById('contactCount'), purchaseCount=document.getElementById('purchaseCount'), waitingCount=document.getElementById('waitingCount');
+    let contacts=[], purchases=[], selectedKey=null, sortMode='latest';
 
-    const totalCount = document.getElementById("totalCount");
-    const newCount = document.getElementById("newCount");
-    const progressCount = document.getElementById("progressCount");
-    const doneCount = document.getElementById("doneCount");
-
-    const emptyDetail = document.getElementById("emptyDetail");
-    const detailPanel = document.getElementById("detailPanel");
-
-    const detailType = document.getElementById("detailType");
-    const detailCompany = document.getElementById("detailCompany");
-    const detailName = document.getElementById("detailName");
-    const detailTel = document.getElementById("detailTel");
-    const detailExp = document.getElementById("detailExp");
-    const detailBudget = document.getElementById("detailBudget");
-    const detailPeriod = document.getElementById("detailPeriod");
-    const detailDate = document.getElementById("detailDate");
-    const detailStatusBadge = document.getElementById("detailStatusBadge");
-
-    let allRequests = [];
-    let selectedId = null;
-    let sortMode = "latest";
-
-    function formatDate(timestamp) {
-      if (!timestamp?.toDate) return "시간 정보 없음";
-      const date = timestamp.toDate();
-      return new Intl.DateTimeFormat("ko-KR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      }).format(date);
-    }
-
-    function getStatusClass(status) {
-      switch (status) {
-        case "진행중":
-          return "status-progress";
-        case "완료":
-          return "status-done";
-        case "보류":
-          return "status-hold";
-        default:
-          return "status-new";
-      }
-    }
-
-    function getFilteredData() {
-      const keyword = searchInput.value.trim().toLowerCase();
-      const typeValue = typeFilter.value;
-      const statusValue = statusFilter.value;
-
-      let filtered = [...allRequests].filter(item => {
-        const searchable = `${item.company || ""} ${item.name || ""} ${item.tel || ""}`.toLowerCase();
-        const matchKeyword = !keyword || searchable.includes(keyword);
-        const matchType = typeValue === "all" || item.type === typeValue;
-        const matchStatus = statusValue === "all" || (item.status || "신규") === statusValue;
-        return matchKeyword && matchType && matchStatus;
-      });
-
-      filtered.sort((a, b) => {
-        const aTime = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
-        const bTime = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
-        return sortMode === "latest" ? bTime - aTime : aTime - bTime;
-      });
-
-      return filtered;
-    }
-
-    function updateCounters(data) {
-      totalCount.textContent = data.length;
-      newCount.textContent = data.filter(v => (v.status || "신규") === "신규").length;
-      progressCount.textContent = data.filter(v => v.status === "진행중").length;
-      doneCount.textContent = data.filter(v => v.status === "완료").length;
-    }
-
-    function renderList() {
-      const data = getFilteredData();
-      updateCounters(allRequests);
-
-      if (!data.length) {
-        requestList.innerHTML = `
-          <div class="glass rounded-[2rem] p-10 text-center shadow-lg shadow-slate-200/20">
-            <p class="text-slate-400 font-medium">표시할 문의가 없습니다.</p>
-          </div>
-        `;
-        return;
-      }
-
-      requestList.innerHTML = data.map(item => {
-        const status = item.status || "신규";
-        const isActive = selectedId === item.id;
-
-        return `
-          <article
-            class="request-card fade-up glass rounded-[2rem] p-5 md:p-6 shadow-lg shadow-slate-200/20 cursor-pointer border ${isActive ? 'border-blue-400 ring-2 ring-blue-100' : 'border-white/60'}"
-            data-id="${item.id}"
-          >
-            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div class="min-w-0">
-                <div class="flex flex-wrap items-center gap-2 mb-3">
-                  <span class="inline-flex rounded-full bg-blue-50 text-blue-700 px-3 py-1 text-xs font-bold">${item.type || "-"}</span>
-                  <span class="status-badge ${getStatusClass(status)}">${status}</span>
-                </div>
-
-                <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-1 break-keep">
-                  ${item.company || "회사명 없음"}
-                </h3>
-                <p class="text-slate-500 text-sm md:text-base">
-                  ${item.name || "-"} · ${item.tel || "-"}
-                </p>
-              </div>
-
-              <div class="text-left md:text-right shrink-0">
-                <p class="text-xs font-bold text-slate-400 mb-1">접수일</p>
-                <p class="text-sm md:text-base font-bold text-slate-700">${formatDate(item.createdAt)}</p>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-5">
-              <div class="rounded-2xl bg-slate-50 px-4 py-3">
-                <p class="text-[11px] font-bold text-slate-400 mb-1">경험</p>
-                <p class="text-sm font-bold text-slate-800">${item.experience || "-"}</p>
-              </div>
-              <div class="rounded-2xl bg-slate-50 px-4 py-3">
-                <p class="text-[11px] font-bold text-slate-400 mb-1">예산</p>
-                <p class="text-sm font-bold text-slate-800">${item.budget || "-"}</p>
-              </div>
-              <div class="rounded-2xl bg-slate-50 px-4 py-3 col-span-2 md:col-span-1">
-                <p class="text-[11px] font-bold text-slate-400 mb-1">희망 기간</p>
-                <p class="text-sm font-bold text-slate-800">${item.period || "-"}</p>
-              </div>
-            </div>
-          </article>
-        `;
-      }).join("");
-
-      document.querySelectorAll("[data-id]").forEach(card => {
-        card.addEventListener("click", () => {
-          const id = card.dataset.id;
-          const selected = allRequests.find(item => item.id === id);
-          if (!selected) return;
-          selectedId = id;
-          renderList();
-          renderDetail(selected);
-        });
-      });
-
-      if (!selectedId && data.length) {
-        selectedId = data[0].id;
-        renderDetail(data[0]);
-        renderList();
-      } else if (selectedId) {
-        const selected = allRequests.find(item => item.id === selectedId);
-        if (selected) renderDetail(selected);
-      }
-    }
-
-    function renderDetail(item) {
-      emptyDetail.classList.add("hidden");
-      detailPanel.classList.remove("hidden");
-
-      const status = item.status || "신규";
-      detailType.textContent = item.type || "-";
-      detailCompany.textContent = item.company || "-";
-      detailName.textContent = item.name || "-";
-      detailTel.textContent = item.tel || "-";
-      detailExp.textContent = item.experience || "-";
-      detailBudget.textContent = item.budget || "-";
-      detailPeriod.textContent = item.period || "-";
-      detailDate.textContent = formatDate(item.createdAt);
-
-      detailStatusBadge.textContent = status;
-      detailStatusBadge.className = `status-badge ${getStatusClass(status)}`;
-    }
-
-    async function updateStatus(newStatus) {
-      if (!selectedId) return;
-      try {
-        await updateDoc(doc(db, "requests", selectedId), {
-          status: newStatus
-        });
-      } catch (error) {
-        console.error(error);
-        alert("상태 변경 중 오류가 발생했습니다.");
-      }
-    }
-
-    document.querySelectorAll(".status-action").forEach(btn => {
-      btn.addEventListener("click", () => {
-        updateStatus(btn.dataset.status);
-      });
-    });
-
-    searchInput.addEventListener("input", renderList);
-    typeFilter.addEventListener("change", renderList);
-    statusFilter.addEventListener("change", renderList);
-
-    sortBtn.addEventListener("click", () => {
-      sortMode = sortMode === "latest" ? "oldest" : "latest";
-      sortBtn.textContent = sortMode === "latest" ? "최신순" : "오래된순";
-      renderList();
-    });
-
-    const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
-
-    onSnapshot(q, (snapshot) => {
-      allRequests = snapshot.docs.map(docSnap => ({
-        id: docSnap.id,
-        ...docSnap.data()
-      }));
-      renderList();
-    }, (error) => {
-      console.error(error);
-      requestList.innerHTML = `
-        <div class="glass rounded-[2rem] p-8 text-center">
-          <p class="text-red-500 font-bold mb-2">데이터를 불러오지 못했습니다.</p>
-          <p class="text-slate-400 text-sm">Firebase 설정 또는 권한 규칙을 확인해주세요.</p>
-        </div>
-      `;
-    });
+    const won=v=>`₩${Number(v||0).toLocaleString('ko-KR')}`;
+    const safe=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    function formatDate(t){const d=t?.toDate?t.toDate():(t?new Date(t):null);if(!d||Number.isNaN(d.getTime()))return '시간 정보 없음';return new Intl.DateTimeFormat('ko-KR',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(d)}
+    function statusClass(status){return {'진행중':'status-progress','완료':'status-done','보류':'status-hold','입금 확인중':'status-pay-wait','입금 확인 완료':'status-pay-done','작업 중':'status-working','전송완료':'status-sent'}[status]||'status-new'}
+    function allData(){return [...contacts,...purchases]}
+    function filteredData(){const key=searchInput.value.trim().toLowerCase();let arr=allData().filter(item=>{const text=`${item.company||item.companyName||''} ${item.name||item.depositorName||''} ${item.tel||item.phoneNumber||''} ${item.deliveryEmail||''} ${item.templateName||''}`.toLowerCase();return (!key||text.includes(key))&&(categoryFilter.value==='all'||item.category===categoryFilter.value)&&(statusFilter.value==='all'||(item.status||'신규')===statusFilter.value)});arr.sort((a,b)=>{const at=a.createdAt?.toDate?a.createdAt.toDate().getTime():new Date(a.createdAtClient||0).getTime();const bt=b.createdAt?.toDate?b.createdAt.toDate().getTime():new Date(b.createdAtClient||0).getTime();return sortMode==='latest'?bt-at:at-bt});return arr}
+    function updateCounters(){const data=allData();totalCount.textContent=data.length;contactCount.textContent=contacts.length;purchaseCount.textContent=purchases.length;waitingCount.textContent=purchases.filter(v=>(v.status||'입금 확인중')==='입금 확인중').length}
+    function renderList(){updateCounters();const data=filteredData();if(!data.length){requestList.innerHTML='<div class="glass rounded-[2rem] p-10 text-center shadow-lg shadow-slate-200/20"><p class="text-slate-400 font-medium">표시할 신청이 없습니다.</p></div>';return}requestList.innerHTML=data.map(item=>{const status=item.status||(item.category==='purchase'?'입금 확인중':'신규');const key=`${item.category}:${item.id}`;const title=item.category==='purchase'?item.companyName:item.company;const name=item.category==='purchase'?item.depositorName:item.name;const sub=item.category==='purchase'?`${item.templateName||'-'} · ${item.deliveryEmail||'-'}`:`${item.type||'-'} · ${item.tel||'-'}`;return `<article class="request-card fade-up glass rounded-[2rem] p-5 md:p-6 shadow-lg shadow-slate-200/20 cursor-pointer border ${selectedKey===key?'border-blue-400 ring-2 ring-blue-100':'border-white/60'}" data-key="${key}"><div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"><div class="min-w-0"><div class="flex flex-wrap items-center gap-2 mb-3"><span class="inline-flex rounded-full ${item.category==='purchase'?'bg-violet-50 text-violet-700':'bg-blue-50 text-blue-700'} px-3 py-1 text-xs font-black">${item.category==='purchase'?'구매 신청':'문의 신청'}</span><span class="status-badge ${statusClass(status)}">${safe(status)}</span></div><h3 class="text-2xl md:text-3xl font-black tracking-tight leading-tight mb-1 break-keep">${safe(title||'회사명 없음')}</h3><p class="text-slate-500 text-sm md:text-base">${safe(name||'-')} · ${safe(sub)}</p></div><div class="text-left md:text-right shrink-0"><p class="text-xs font-bold text-slate-400 mb-1">접수일</p><p class="text-sm md:text-base font-bold text-slate-700">${formatDate(item.createdAt||item.createdAtClient)}</p></div></div><div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-5"><div class="rounded-2xl bg-slate-50 px-4 py-3"><p class="text-[11px] font-bold text-slate-400 mb-1">금액/예산</p><p class="text-sm font-bold text-slate-800">${item.category==='purchase'?won(item.totalPrice):safe(item.budget||'-')}</p></div><div class="rounded-2xl bg-slate-50 px-4 py-3"><p class="text-[11px] font-bold text-slate-400 mb-1">옵션/경험</p><p class="text-sm font-bold text-slate-800">${item.category==='purchase'?(item.supportOption?'대행 옵션':'소스코드만'):safe(item.experience||'-')}</p></div><div class="rounded-2xl bg-slate-50 px-4 py-3 col-span-2 md:col-span-1"><p class="text-[11px] font-bold text-slate-400 mb-1">상태</p><p class="text-sm font-bold text-slate-800">${safe(status)}</p></div></div></article>`}).join('');document.querySelectorAll('[data-key]').forEach(card=>card.addEventListener('click',()=>{selectedKey=card.dataset.key;const [cat,id]=selectedKey.split(':');const selected=allData().find(v=>v.category===cat&&v.id===id);if(selected){renderList();renderDetail(selected)}}));if(!selectedKey&&data.length){selectedKey=`${data[0].category}:${data[0].id}`;renderDetail(data[0]);renderList()}}
+    function detailRow(label,value){return `<div class="rounded-2xl bg-slate-50 p-4"><p class="text-xs text-slate-400 font-bold mb-1">${label}</p><p class="text-base font-bold text-slate-800 break-words">${safe(value||'-')}</p></div>`}
+    function renderDetail(item){emptyDetail.classList.add('hidden');detailPanel.classList.remove('hidden');const isPurchase=item.category==='purchase';const status=item.status||(isPurchase?'입금 확인중':'신규');const buttons=isPurchase?['입금 확인중','입금 확인 완료','작업 중','전송완료']:['신규','진행중','완료','보류'];detailPanel.innerHTML=`<div class="mb-6"><div class="flex items-start justify-between gap-3"><div><p class="text-sm font-black ${isPurchase?'text-violet-600':'text-blue-600'} mb-2">${isPurchase?'구매 신청':'문의 신청'}</p><h4 class="text-3xl font-black tracking-tight leading-tight">${safe(isPurchase?item.companyName:item.company)}</h4><p class="text-slate-500 mt-2 text-base">${safe(isPurchase?item.depositorName:item.name)}</p></div><div class="status-badge ${statusClass(status)}">${safe(status)}</div></div></div><div class="space-y-4 mb-6">${isPurchase?`${detailRow('템플릿',item.templateName)}<div class="grid grid-cols-2 gap-4">${detailRow('총 금액',won(item.totalPrice))}${detailRow('옵션',item.supportOption?'대행 옵션 선택':'소스코드만 구매')}</div>${detailRow('이메일',item.deliveryEmail)}<div class="grid grid-cols-2 gap-4">${detailRow('연락처',item.phoneNumber)}${detailRow('희망 도메인',item.domainName)}</div>${detailRow('추가 요청사항',item.memo)}${detailRow('지급 기준',item.deliveryPolicy)}${detailRow('접수 시간',formatDate(item.createdAt||item.createdAtClient))}`:`${detailRow('연락처',item.tel)}<div class="grid grid-cols-2 gap-4">${detailRow('제작 경험',item.experience)}${detailRow('예산',item.budget)}</div>${detailRow('희망 기간',item.period)}${detailRow('문의 유형',item.type)}${detailRow('접수 시간',formatDate(item.createdAt))}`}</div><div><p class="text-sm font-bold text-slate-500 mb-3">상태 변경</p><div class="grid grid-cols-2 gap-3">${buttons.map(v=>`<button class="status-action rounded-2xl border px-4 py-3 text-sm font-black ${v===status?'bg-slate-900 text-white border-slate-900':'bg-white border-slate-200 text-slate-700'}" data-status="${v}">${v}</button>`).join('')}</div></div>`;document.querySelectorAll('.status-action').forEach(btn=>btn.addEventListener('click',()=>updateStatus(item,btn.dataset.status)))}
+    async function updateStatus(item,newStatus){try{await updateDoc(doc(db,item.category==='purchase'?'purchaseRequests':'requests',item.id),{status:newStatus,updatedAt:new Date().toISOString()})}catch(e){console.error(e);alert('상태 변경 중 오류가 발생했습니다.')}}
+    [searchInput,categoryFilter,statusFilter].forEach(el=>el.addEventListener('input',renderList));categoryFilter.addEventListener('change',renderList);statusFilter.addEventListener('change',renderList);sortBtn.addEventListener('click',()=>{sortMode=sortMode==='latest'?'oldest':'latest';sortBtn.textContent=sortMode==='latest'?'최신순':'오래된순';renderList()});
+    onSnapshot(query(collection(db,'requests'),orderBy('createdAt','desc')),snap=>{contacts=snap.docs.map(d=>({id:d.id,category:'contact',...d.data()}));renderList()},err=>{console.error(err)});
+    onSnapshot(query(collection(db,'purchaseRequests'),orderBy('createdAt','desc')),snap=>{purchases=snap.docs.map(d=>({id:d.id,category:'purchase',...d.data()}));renderList()},err=>{console.error(err);requestList.innerHTML='<div class="glass rounded-[2rem] p-8 text-center"><p class="text-red-500 font-bold mb-2">구매 신청 데이터를 불러오지 못했습니다.</p><p class="text-slate-400 text-sm">Firebase 권한 규칙 또는 인덱스를 확인해주세요.</p></div>'});
   </script>
 </body>
 </html>
