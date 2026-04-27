@@ -90,6 +90,35 @@
         nav a { text-decoration: none; color: var(--text-black); font-family: 'GmarketSans', sans-serif; font-size: 18px; font-weight: 700; transition: opacity 0.3s ease, color 0.3s ease; }
         nav a:hover { opacity: 0.6; }
         nav a.highlight { color: var(--primary-blue); }
+        .menu-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(42, 56, 214, 0.18);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            cursor: pointer;
+            position: relative;
+            z-index: 130;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            box-shadow: 0 14px 38px rgba(42, 56, 214, 0.1);
+        }
+        .menu-toggle span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            border-radius: 999px;
+            background: var(--primary-blue);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .menu-toggle.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-toggle.is-open span:nth-child(2) { opacity: 0; }
+        .menu-toggle.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         /* [섹션 1 스타일] */
         .hero-section { height: 100dvh; display: flex; align-items: center; padding: 0 10vw; position: relative; z-index: 1; }
@@ -99,6 +128,11 @@
         .pagination .step.active { color: var(--primary-blue); transform: scale(1.2); }
         .main-title { display: flex; flex-direction: column; gap: 10px; }
         .hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 30px; }
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
         .hero-cta-button {
             display: inline-flex;
             align-items: center;
@@ -132,6 +166,15 @@
             box-shadow: 0 22px 55px rgba(42, 56, 214, 0.28);
         }
         .hero-cta-button:hover::after { transform: translateX(4px); }
+        .hero-cta-button-sub {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-blue);
+            border: 1px solid rgba(42, 56, 214, 0.22);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+        }
+        .hero-cta-button-sub:hover {
+            box-shadow: 0 22px 55px rgba(42, 56, 214, 0.16);
+        }
         @keyframes ctaFadeUp { 0% { opacity: 0; transform: translateY(18px); } 100% { opacity: 1; transform: translateY(0); } }
         .title-line { overflow: hidden; font-size: 5rem; font-weight: 800; line-height: 1.2; letter-spacing: -2px; }
         
@@ -716,7 +759,65 @@
             }
 
             header {
-                padding: 24px 5vw;
+                padding: 20px 5vw;
+                align-items: center;
+            }
+
+            .header-left,
+            .header-right {
+                flex: 0 0 auto;
+            }
+
+            .header-right {
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            nav {
+                position: fixed;
+                top: 76px;
+                left: 5vw;
+                right: 5vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                gap: 0;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.92);
+                border: 1px solid rgba(42, 56, 214, 0.14);
+                border-radius: 26px;
+                box-shadow: 0 26px 80px rgba(0, 0, 0, 0.12);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-12px);
+                pointer-events: none;
+                transition: opacity 0.28s ease, visibility 0.28s ease, transform 0.28s ease;
+                z-index: 120;
+            }
+
+            nav.is-open {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            nav a {
+                width: 100%;
+                padding: 18px 20px;
+                border-radius: 18px;
+                font-size: 16px;
+            }
+
+            nav a:hover,
+            nav a.highlight {
+                background: rgba(42, 56, 214, 0.08);
             }
 
             .logo {
@@ -724,12 +825,7 @@
                 letter-spacing: -1.2px;
             }
 
-            nav {
-                gap: 18px;
-            }
-
             nav a {
-                font-size: 14px;
                 letter-spacing: -0.04em;
             }
 
@@ -747,6 +843,13 @@
 
             .hero-copy {
                 gap: 24px;
+            }
+
+            .hero-cta-group {
+                width: 100%;
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 10px;
             }
 
             .hero-cta-button {
@@ -1063,6 +1166,13 @@
 </script>
 </head>
 <body>
+    <script>
+  (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.");}var ch=function(){ch.c(arguments);};ch.q=[];ch.c=function(args){ch.q.push(args);};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return;}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x);}}if(document.readyState==="complete"){l();}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l);}})();
+
+  ChannelIO('boot', {
+    "pluginKey": "47942dd6-e453-4904-b8aa-37a087a9e377"
+  });
+</script>
     <h1 class="seo-hidden">코어드랩 - 전문 웹 에이전시</h1>
 
     <div class="modern-bg">
@@ -1074,11 +1184,17 @@
 
     <header id="main-header">
         <div class="header-left"><div class="logo">CORED LAB</div></div>
-        <nav>
+        <nav id="main-nav">
             <a href="/template">템플릿 구매</a>
             <a href="/contact" class="highlight">의뢰하기</a>
         </nav>
-        <div class="header-right"></div>
+        <div class="header-right">
+            <button class="menu-toggle" id="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="main-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
     <section class="hero-section">
@@ -1090,7 +1206,10 @@
             </div>
             <div class="hero-copy">
                 <div class="main-title" id="title-container"></div>
-                <a href="/contact" class="hero-cta-button">의뢰하기</a>
+                <div class="hero-cta-group">
+                    <a href="/contact" class="hero-cta-button">의뢰하기</a>
+                    <a href="/template" class="hero-cta-button hero-cta-button-sub">구매하기</a>
+                </div>
             </div>
         </div>
         <div class="right-content" id="bg-text-container"></div>
@@ -1340,12 +1459,38 @@
         renderSlide(currentIndex);
 
         const header = document.getElementById('main-header');
+        const menuToggle = document.getElementById('menu-toggle');
+        const mainNav = document.getElementById('main-nav');
+
+        if (menuToggle && mainNav) {
+            menuToggle.addEventListener('click', () => {
+                const isOpen = mainNav.classList.toggle('is-open');
+                menuToggle.classList.toggle('is-open', isOpen);
+                menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                menuToggle.setAttribute('aria-label', isOpen ? '메뉴 닫기' : '메뉴 열기');
+            });
+
+            mainNav.querySelectorAll('a').forEach((link) => {
+                link.addEventListener('click', () => {
+                    mainNav.classList.remove('is-open');
+                    menuToggle.classList.remove('is-open');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.setAttribute('aria-label', '메뉴 열기');
+                });
+            });
+        }
 
         const scrollHint = document.getElementById('scroll-hint');
         
         lenis.on('scroll', (e) => {
             const scrollPos = window.scrollY;
 
+            if (mainNav && menuToggle && mainNav.classList.contains('is-open')) {
+                mainNav.classList.remove('is-open');
+                menuToggle.classList.remove('is-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.setAttribute('aria-label', '메뉴 열기');
+            }
 
             if (scrollHint) {
                 scrollHint.classList.toggle('hide', scrollPos > 80);
