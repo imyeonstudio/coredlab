@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>코어드랩 - 쿠폰 뽑기</title>
+
+  <style>
+    @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+    :root {
+      --bg: #fff7ed;
+      --card: rgba(255, 255, 255, 0.82);
+      --dark: #171717;
+      --muted: #78716c;
+      --line: rgba(23, 23, 23, 0.1);
+      --main: #f97316;
+      --main-dark: #ea580c;
+      --soft: #fed7aa;
+      --cream: #fffbeb;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--dark);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(251, 146, 60, 0.22), transparent 28%),
+        radial-gradient(circle at 86% 18%, rgba(253, 186, 116, 0.25), transparent 32%),
+        radial-gradient(circle at 50% 95%, rgba(254, 215, 170, 0.4), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .event-wrap {
+      width: min(1080px, 100%);
+      min-height: min(680px, calc(100dvh - 64px));
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-radius: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      background: var(--card);
+      backdrop-filter: blur(24px);
+      box-shadow:
+        0 36px 100px rgba(124, 45, 18, 0.14),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.62);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .event-wrap::before {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      right: -130px;
+      top: -130px;
+      border-radius: 50%;
+      background: rgba(251, 146, 60, 0.2);
+      pointer-events: none;
+    }
+
+    .event-wrap::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      left: -120px;
+      bottom: -120px;
+      border-radius: 50%;
+      background: rgba(253, 186, 116, 0.28);
+      pointer-events: none;
+    }
+
+    .left-panel,
+    .right-panel {
+      position: relative;
+      z-index: 2;
+    }
+
+    .left-panel {
+      padding: clamp(34px, 5vw, 64px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 38px;
+      border-right: 1px solid rgba(23, 23, 23, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.22));
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      width: fit-content;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(249, 115, 22, 0.1);
+      color: var(--main-dark);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--main);
+      box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.12);
+    }
+
+    .title h1 {
+      margin-top: 28px;
+      font-size: clamp(50px, 5.2vw, 76px);
+      line-height: 0.98;
+      letter-spacing: -0.075em;
+      font-weight: 900;
+      word-break: keep-all;
+    }
+
+    .title h1 span {
+      color: var(--main);
+    }
+
+    .title p {
+      max-width: 420px;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+      letter-spacing: -0.035em;
+      font-weight: 700;
+      word-break: keep-all;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 430px;
+    }
+
+    .info-box {
+      min-height: 82px;
+      padding: 17px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .info-box strong {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .info-box span {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .right-panel {
+      padding: clamp(30px, 4.5vw, 60px);
+      display: grid;
+      place-items: center;
+    }
+
+    .machine {
+      width: min(440px, 100%);
+      padding: 20px;
+      border-radius: 36px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(23, 23, 23, 0.1);
+      box-shadow: 0 28px 80px rgba(124, 45, 18, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .machine::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.16), transparent 38%);
+      pointer-events: none;
+    }
+
+    .machine-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .slot {
+      height: 72px;
+      margin-bottom: 18px;
+      border-radius: 24px;
+      background: #171717;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slot::after {
+      content: "";
+      position: absolute;
+      left: -60%;
+      bottom: 18px;
+      width: 80%;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, var(--main), transparent);
+      animation: scan 1.7s linear infinite;
+    }
+
+    @keyframes scan {
+      from { left: -70%; }
+      to { left: 95%; }
+    }
+
+    .coupon-card {
+      min-height: 230px;
+      padding: 32px 22px;
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, #ffffff 0%, var(--cream) 100%);
+      border: 1px solid rgba(249, 115, 22, 0.22);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coupon-card::before,
+    .coupon-card::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(249, 115, 22, 0.14);
+      transform: translateY(-50%);
+    }
+
+    .coupon-card::before {
+      left: -18px;
+    }
+
+    .coupon-card::after {
+      right: -18px;
+    }
+
+    .coupon-label {
+      color: var(--main-dark);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      margin-bottom: 16px;
+    }
+
+    .coupon-result {
+      max-width: 100%;
+      font-size: clamp(34px, 4vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.075em;
+      font-weight: 900;
+      word-break: keep-all;
+    }
+
+    .coupon-result.result-active {
+      color: var(--main-dark);
+      text-shadow: 0 10px 30px rgba(249, 115, 22, 0.18);
+    }
+
+    .coupon-note {
+      max-width: 280px;
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+      word-break: keep-all;
+    }
+
+    .coupon-card.shake {
+      animation: shake 0.12s linear infinite;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0) rotate(0); }
+      25% { transform: translateX(-3px) rotate(-0.5deg); }
+      50% { transform: translateX(3px) rotate(0.5deg); }
+      75% { transform: translateX(-2px) rotate(-0.4deg); }
+      100% { transform: translateX(0) rotate(0); }
+    }
+
+    .button-group {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .draw-button,
+    .reset-button,
+    .setting-button {
+      width: 100%;
+      border: 0;
+      cursor: pointer;
+      transition: 0.22s ease;
+      letter-spacing: -0.04em;
+    }
+
+    .draw-button {
+      height: 62px;
+      border-radius: 22px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--main), var(--main-dark));
+      box-shadow: 0 18px 34px rgba(249, 115, 22, 0.28);
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .draw-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 42px rgba(249, 115, 22, 0.34);
+    }
+
+    .draw-button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .sub-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .reset-button,
+    .setting-button {
+      height: 52px;
+      border-radius: 19px;
+      color: var(--dark);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .setting-button {
+      background: #171717;
+      color: #fff;
+      border-color: #171717;
+    }
+
+    .reset-button:hover,
+    .setting-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .confetti {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 20;
+    }
+
+    .piece {
+      position: absolute;
+      top: -20px;
+      width: 8px;
+      height: 14px;
+      border-radius: 3px;
+      animation: fall 1.65s ease-in forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(760px) rotate(560deg);
+        opacity: 0;
+      }
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(23, 23, 23, 0.42);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(760px, 100%);
+      max-height: min(760px, calc(100dvh - 40px));
+      overflow: hidden;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 36px 100px rgba(23, 23, 23, 0.24);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-head {
+      padding: 24px 24px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .modal-head h2 {
+      font-size: 28px;
+      line-height: 1.1;
+      letter-spacing: -0.06em;
+      font-weight: 900;
+    }
+
+    .modal-head p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+    }
+
+    .close-button {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .modal-body {
+      padding: 20px 24px;
+      overflow-y: auto;
+    }
+
+    .setting-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 900;
+      color: #44403c;
+      letter-spacing: -0.03em;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px 14px;
+      background: #fff;
+      color: var(--dark);
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 72px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .coupon-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .coupon-setting-card {
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: #fffaf3;
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 90px 42px;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .remove-button {
+      height: 45px;
+      border: 0;
+      border-radius: 14px;
+      background: #171717;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .add-button {
+      width: 100%;
+      height: 52px;
+      margin-top: 14px;
+      border: 1px dashed rgba(249, 115, 22, 0.55);
+      border-radius: 18px;
+      background: rgba(249, 115, 22, 0.08);
+      color: var(--main-dark);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .modal-foot {
+      padding: 18px 24px 24px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.3fr;
+      gap: 10px;
+    }
+
+    .foot-button {
+      height: 54px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--dark);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .save-button {
+      border: 0;
+      color: #fff;
+      background: linear-gradient(135deg, var(--main), var(--main-dark));
+      box-shadow: 0 16px 32px rgba(249, 115, 22, 0.25);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 200;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: #171717;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      transition: 0.25s ease;
+      box-shadow: 0 18px 40px rgba(23, 23, 23, 0.24);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 22px;
+        align-items: start;
+      }
+
+      .event-wrap {
+        min-height: calc(100dvh - 44px);
+        grid-template-columns: 1fr;
+        border-radius: 36px;
+      }
+
+      .left-panel {
+        border-right: 0;
+        border-bottom: 1px solid rgba(23, 23, 23, 0.08);
+        padding: 38px 34px 28px;
+        gap: 30px;
+      }
+
+      .title h1 {
+        font-size: clamp(46px, 10vw, 68px);
+      }
+
+      .title p {
+        max-width: 100%;
+      }
+
+      .info-row {
+        max-width: 100%;
+      }
+
+      .right-panel {
+        padding: 30px 34px 38px;
+      }
+
+      .machine {
+        width: 100%;
+        max-width: 540px;
+      }
+
+      .coupon-setting-card {
+        grid-template-columns: 1fr;
+      }
+
+      .setting-top {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 12px;
+      }
+
+      .event-wrap {
+        min-height: calc(100dvh - 24px);
+        border-radius: 28px;
+      }
+
+      .left-panel {
+        padding: 28px 22px 22px;
+        gap: 24px;
+      }
+
+      .badge {
+        font-size: 11px;
+        padding: 8px 11px;
+      }
+
+      .title h1 {
+        margin-top: 22px;
+        font-size: 42px;
+        line-height: 1.02;
+      }
+
+      .title p {
+        margin-top: 18px;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .info-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .info-box {
+        min-height: 64px;
+        padding: 12px;
+        border-radius: 17px;
+      }
+
+      .info-box strong {
+        font-size: 15px;
+      }
+
+      .info-box span {
+        font-size: 11px;
+      }
+
+      .right-panel {
+        padding: 20px 14px 22px;
+      }
+
+      .machine {
+        padding: 14px;
+        border-radius: 26px;
+      }
+
+      .slot {
+        height: 58px;
+        border-radius: 18px;
+        margin-bottom: 12px;
+        font-size: 10px;
+      }
+
+      .coupon-card {
+        min-height: 188px;
+        border-radius: 24px;
+        padding: 26px 18px;
+      }
+
+      .coupon-label {
+        font-size: 10px;
+        margin-bottom: 12px;
+      }
+
+      .coupon-result {
+        font-size: 32px;
+      }
+
+      .coupon-note {
+        font-size: 13px;
+      }
+
+      .draw-button {
+        height: 58px;
+        border-radius: 19px;
+        font-size: 16px;
+      }
+
+      .sub-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .reset-button,
+      .setting-button {
+        height: 48px;
+        border-radius: 17px;
+      }
+
+      .modal {
+        padding: 10px;
+      }
+
+      .modal-box {
+        max-height: calc(100dvh - 20px);
+        border-radius: 24px;
+      }
+
+      .modal-head {
+        padding: 20px 18px 16px;
+      }
+
+      .modal-head h2 {
+        font-size: 24px;
+      }
+
+      .modal-body {
+        padding: 18px;
+      }
+
+      .modal-foot {
+        padding: 16px 18px 18px;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .title h1 {
+        font-size: 37px;
+      }
+
+      .coupon-result {
+        font-size: 28px;
+      }
+
+      .info-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="event-wrap">
+    <div class="confetti" id="confetti"></div>
+
+    <section class="left-panel">
+      <div class="title">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          STORE COUPON
+        </div>
+
+        <h1>
+          랜덤 쿠폰<br />
+          <span>뽑기 이벤트</span>
+        </h1>
+
+        <p>
+          버튼을 누르면 오늘 사용할 수 있는 랜덤 쿠폰이 발급됩니다.
+        </p>
+      </div>
+
+      <div class="info-row">
+        <div class="info-box">
+          <strong>1인 1회</strong>
+          <span>직원 확인 후 사용</span>
+        </div>
+
+        <div class="info-box">
+          <strong>당일 사용</strong>
+          <span>쿠폰 화면 제시</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="right-panel">
+      <div class="machine">
+        <div class="machine-inner">
+          <div class="slot">RANDOM COUPON</div>
+
+          <div class="coupon-card" id="couponCard">
+            <div class="coupon-label">TODAY COUPON</div>
+            <div class="coupon-result" id="couponResult">쿠폰을 뽑아보세요</div>
+            <div class="coupon-note" id="couponNote">1인 1회 참여 가능합니다</div>
+          </div>
+
+          <div class="button-group">
+            <button class="draw-button" id="drawButton" onclick="drawCoupon()">
+              랜덤 쿠폰 뽑기
+            </button>
+
+            <div class="sub-buttons">
+              <button class="reset-button" id="resetButton" onclick="resetCoupon()">
+                돌아가기
+              </button>
+
+              <button class="setting-button" onclick="openSettings()">
+                설정하기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="modal" id="settingModal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h2>쿠폰 설정</h2>
+          <p>
+            쿠폰 목록과 당첨 확률을 수정할 수 있습니다. 확률 숫자가 높을수록 더 자주 당첨됩니다.
+          </p>
+        </div>
+
+        <button class="close-button" onclick="closeSettings()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="setting-top">
+          <div class="field">
+            <label for="mainTitleInput">메인 제목</label>
+            <textarea id="mainTitleInput"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="descInput">설명 문구</label>
+            <input id="descInput" type="text" />
+          </div>
+        </div>
+
+        <div class="coupon-list" id="couponList"></div>
+
+        <button class="add-button" onclick="addCouponSetting()">
+          쿠폰 추가하기
+        </button>
+      </div>
+
+      <div class="modal-foot">
+        <button class="foot-button" onclick="resetDefaultSettings()">
+          기본값 복구
+        </button>
+
+        <button class="foot-button" onclick="closeSettings()">
+          취소
+        </button>
+
+        <button class="foot-button save-button" onclick="saveSettings()">
+          설정 저장하기
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast">설정이 저장되었습니다</div>
+
+  <script>
+    const STORAGE_KEY = "random-coupon-event-settings";
+
+    const defaultSettings = {
+      mainTitle: "랜덤 쿠폰<br /><span>뽑기 이벤트</span>",
+      description: "버튼을 누르면 오늘 사용할 수 있는 랜덤 쿠폰이 발급됩니다.",
+      coupons: [
+        {
+          title: "아메리카노 무료",
+          note: "주문 시 직원에게 화면을 보여주세요.",
+          weight: 10
+        },
+        {
+          title: "전 메뉴 10% 할인",
+          note: "오늘 하루만 사용할 수 있습니다.",
+          weight: 30
+        },
+        {
+          title: "디저트 1개 증정",
+          note: "음료 주문 시 함께 사용할 수 있습니다.",
+          weight: 20
+        },
+        {
+          title: "다음 방문 2,000원 할인",
+          note: "재방문 시 직원에게 보여주세요.",
+          weight: 25
+        },
+        {
+          title: "랜덤 굿즈 증정",
+          note: "카운터에서 쿠폰을 확인해주세요.",
+          weight: 10
+        },
+        {
+          title: "한 번 더 뽑기",
+          note: "직원에게 보여주고 한 번 더 참여하세요.",
+          weight: 5
+        }
+      ]
+    };
+
+    let settings = loadSettings();
+
+    const couponCard = document.getElementById("couponCard");
+    const couponResult = document.getElementById("couponResult");
+    const couponNote = document.getElementById("couponNote");
+    const drawButton = document.getElementById("drawButton");
+    const resetButton = document.getElementById("resetButton");
+    const confetti = document.getElementById("confetti");
+    const settingModal = document.getElementById("settingModal");
+    const couponList = document.getElementById("couponList");
+    const toast = document.getElementById("toast");
+
+    let isDrawing = false;
+
+    applyTextSettings();
+
+    function loadSettings() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+
+      if (!saved) {
+        return structuredClone(defaultSettings);
+      }
+
+      try {
+        const parsed = JSON.parse(saved);
+
+        if (!parsed.coupons || !Array.isArray(parsed.coupons)) {
+          return structuredClone(defaultSettings);
+        }
+
+        return parsed;
+      } catch {
+        return structuredClone(defaultSettings);
+      }
+    }
+
+    function applyTextSettings() {
+      settings.mainTitle = ensureTitleHighlight(settings.mainTitle || defaultSettings.mainTitle);
+      document.querySelector(".title h1").innerHTML = settings.mainTitle;
+      document.querySelector(".title p").textContent = settings.description;
+    }
+
+    function drawCoupon() {
+      if (isDrawing) return;
+
+      if (!settings.coupons.length) {
+        showToast("쿠폰을 먼저 추가해주세요");
+        return;
+      }
+
+      isDrawing = true;
+      drawButton.disabled = true;
+      drawButton.textContent = "쿠폰 뽑는 중...";
+      couponCard.classList.add("shake");
+
+      let shuffleCount = 0;
+
+      const shuffle = setInterval(() => {
+        const randomCoupon = settings.coupons[Math.floor(Math.random() * settings.coupons.length)];
+
+        couponResult.textContent = randomCoupon.title;
+        couponNote.textContent = "결과를 확인하는 중입니다...";
+
+        shuffleCount++;
+
+        if (shuffleCount >= 18) {
+          clearInterval(shuffle);
+
+          const selectedCoupon = pickWeightedCoupon();
+
+          setTimeout(() => {
+            couponCard.classList.remove("shake");
+            couponResult.classList.add("result-active");
+            couponResult.textContent = selectedCoupon.title;
+            couponNote.textContent = selectedCoupon.note;
+            drawButton.textContent = "쿠폰 발급 완료";
+            drawButton.disabled = true;
+            resetButton.textContent = "돌아가기";
+            isDrawing = false;
+            makeConfetti();
+          }, 250);
+        }
+      }, 75);
+    }
+
+    function pickWeightedCoupon() {
+      const validCoupons = settings.coupons
+        .map(coupon => ({
+          ...coupon,
+          weight: Number(coupon.weight) > 0 ? Number(coupon.weight) : 0
+        }))
+        .filter(coupon => coupon.weight > 0);
+
+      if (!validCoupons.length) {
+        return settings.coupons[Math.floor(Math.random() * settings.coupons.length)];
+      }
+
+      const totalWeight = validCoupons.reduce((sum, coupon) => sum + coupon.weight, 0);
+      let random = Math.random() * totalWeight;
+
+      for (const coupon of validCoupons) {
+        random -= coupon.weight;
+
+        if (random <= 0) {
+          return coupon;
+        }
+      }
+
+      return validCoupons[validCoupons.length - 1];
+    }
+
+    function resetCoupon() {
+      if (isDrawing) return;
+
+      couponResult.classList.remove("result-active");
+      couponResult.textContent = "쿠폰을 뽑아보세요";
+      couponNote.textContent = "1인 1회 참여 가능합니다";
+      drawButton.textContent = "랜덤 쿠폰 뽑기";
+      drawButton.disabled = false;
+      resetButton.textContent = "돌아가기";
+      confetti.innerHTML = "";
+    }
+
+    function openSettings() {
+      document.getElementById("mainTitleInput").value = stripTitleHtml(settings.mainTitle);
+      document.getElementById("descInput").value = settings.description;
+
+      renderCouponSettings();
+      settingModal.classList.add("show");
+    }
+
+    function closeSettings() {
+      settingModal.classList.remove("show");
+    }
+
+    function stripTitleHtml(title) {
+      return title
+        .replace("<br />", "\n")
+        .replace("<br>", "\n")
+        .replace("<span>", "")
+        .replace("</span>", "");
+    }
+
+    function ensureTitleHighlight(title) {
+      if (title.includes("<span>")) {
+        return title;
+      }
+
+      return titleToHtml(stripTitleHtml(title));
+    }
+
+    function titleToHtml(title) {
+      const lines = title
+        .split("\n")
+        .map(line => line.trim())
+        .filter(Boolean);
+
+      if (lines.length >= 2) {
+        return `${escapeHtml(lines[0])}<br /><span>${escapeHtml(lines.slice(1).join(" "))}</span>`;
+      }
+
+      const words = title.trim().split(/\s+/).filter(Boolean);
+
+      if (words.length >= 2) {
+        const accentWord = words.pop();
+        return `${escapeHtml(words.join(" "))} <span>${escapeHtml(accentWord)}</span>`;
+      }
+
+      return `<span>${escapeHtml(title)}</span>`;
+    }
+
+    function renderCouponSettings() {
+      couponList.innerHTML = "";
+
+      settings.coupons.forEach((coupon, index) => {
+        const item = document.createElement("div");
+        item.className = "coupon-setting-card";
+
+        item.innerHTML = `
+          <div class="field">
+            <label>쿠폰명</label>
+            <input type="text" value="${escapeAttribute(coupon.title)}" data-index="${index}" data-key="title" />
+          </div>
+
+          <div class="field">
+            <label>안내 문구</label>
+            <input type="text" value="${escapeAttribute(coupon.note)}" data-index="${index}" data-key="note" />
+          </div>
+
+          <div class="field">
+            <label>확률</label>
+            <input type="number" min="0" value="${escapeAttribute(String(coupon.weight))}" data-index="${index}" data-key="weight" />
+          </div>
+
+          <button class="remove-button" onclick="removeCouponSetting(${index})">삭제</button>
+        `;
+
+        couponList.appendChild(item);
+      });
+    }
+
+    function addCouponSetting() {
+      settings.coupons.push({
+        title: "새 쿠폰",
+        note: "쿠폰 안내 문구를 입력해주세요.",
+        weight: 10
+      });
+
+      renderCouponSettings();
+    }
+
+    function removeCouponSetting(index) {
+      settings.coupons.splice(index, 1);
+      renderCouponSettings();
+    }
+
+    function saveSettings() {
+      const mainTitle = document.getElementById("mainTitleInput").value.trim();
+      const description = document.getElementById("descInput").value.trim();
+
+      const inputs = couponList.querySelectorAll("input");
+
+      inputs.forEach(input => {
+        const index = Number(input.dataset.index);
+        const key = input.dataset.key;
+
+        if (!settings.coupons[index]) return;
+
+        if (key === "weight") {
+          settings.coupons[index][key] = Math.max(0, Number(input.value) || 0);
+        } else {
+          settings.coupons[index][key] = input.value.trim();
+        }
+      });
+
+      settings.coupons = settings.coupons.filter(coupon => coupon.title.trim());
+
+      if (!settings.coupons.length) {
+        showToast("쿠폰은 최소 1개 이상 필요합니다");
+        return;
+      }
+
+      settings.mainTitle = mainTitle ? titleToHtml(mainTitle) : defaultSettings.mainTitle;
+      settings.description = description || defaultSettings.description;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+
+      applyTextSettings();
+      resetCoupon();
+      closeSettings();
+      showToast("설정이 저장되었습니다");
+    }
+
+    function resetDefaultSettings() {
+      settings = structuredClone(defaultSettings);
+      localStorage.removeItem(STORAGE_KEY);
+
+      applyTextSettings();
+      resetCoupon();
+      renderCouponSettings();
+      document.getElementById("mainTitleInput").value = stripTitleHtml(settings.mainTitle);
+      document.getElementById("descInput").value = settings.description;
+
+      showToast("기본값으로 복구되었습니다");
+    }
+
+    function makeConfetti() {
+      confetti.innerHTML = "";
+
+      const colors = ["#f97316", "#fb923c", "#fdba74", "#171717", "#ffffff"];
+
+      for (let i = 0; i < 70; i++) {
+        const piece = document.createElement("span");
+
+        piece.className = "piece";
+        piece.style.left = Math.random() * 100 + "%";
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 0.45 + "s";
+        piece.style.animationDuration = 1.15 + Math.random() * 1.1 + "s";
+
+        confetti.appendChild(piece);
+      }
+
+      setTimeout(() => {
+        confetti.innerHTML = "";
+      }, 2600);
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeAttribute(text) {
+      return escapeHtml(text);
+    }
+
+    settingModal.addEventListener("click", event => {
+      if (event.target === settingModal) {
+        closeSettings();
+      }
+    });
+  </script>
+</body>
+</html>
