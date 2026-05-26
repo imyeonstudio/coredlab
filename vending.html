@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link rel="icon" href="https://coredlab.cloud/favicon.ico?v=2" type="image/x-icon">
+  <link rel="shortcut icon" href="https://coredlab.cloud/favicon.ico?v=2" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>노래봇 프리미엄 구매 신청</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(88, 101, 242, .18), transparent 32%),
+        radial-gradient(circle at top right, rgba(34, 197, 94, .14), transparent 28%),
+        radial-gradient(circle at bottom, rgba(15, 23, 42, .08), transparent 30%),
+        #f8fafc;
+      color: #0f172a;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, .84);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, .7);
+    }
+
+    .plan-card {
+      transition: .2s ease;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .plan-card.active {
+      border-color: #5865f2;
+      box-shadow: 0 18px 38px rgba(88, 101, 242, .16);
+      background: linear-gradient(135deg, rgba(88, 101, 242, .09), rgba(255, 255, 255, .9));
+    }
+
+    .fade-up {
+      animation: fadeUp .35s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      padding: .45rem .8rem;
+      font-size: .75rem;
+      font-weight: 900;
+    }
+
+    .status-wait { background: #dbeafe; color: #1d4ed8; }
+    .status-paid { background: #fef3c7; color: #b45309; }
+    .status-work { background: #ede9fe; color: #6d28d9; }
+    .status-done { background: #dcfce7; color: #15803d; }
+    .status-etc { background: #e5e7eb; color: #475569; }
+  </style>
+</head>
+
+<body class="min-h-screen px-4 py-8 md:px-8 md:py-12">
+  <main class="max-w-6xl mx-auto">
+    <section class="glass rounded-[2rem] p-6 md:p-10 shadow-xl shadow-slate-200/50 mb-6 fade-up">
+      <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p class="text-sm font-black tracking-[0.18em] text-indigo-600 uppercase mb-3">
+            Music Bot Premium
+          </p>
+
+          <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+            노래봇 프리미엄<br class="hidden md:block" />
+            구매 신청
+          </h1>
+
+          <p class="mt-4 text-slate-500 text-sm md:text-base break-keep leading-relaxed">
+            디스코드 사용자 ID와 입금자명을 입력하고 구매 신청을 남겨주세요.
+            주문 후 <b>24시간 이내 처리 완료</b>를 기준으로 확인해드려요.
+          </p>
+        </div>
+
+        <div class="rounded-[1.5rem] bg-slate-950 text-white p-5 md:min-w-[300px]">
+          <p class="text-xs text-slate-400 font-bold mb-2">처리 안내</p>
+          <h2 class="text-xl font-black leading-relaxed">
+            주문 후 24시간 이내<br />
+            프리미엄 등록 처리
+          </h2>
+          <p class="text-xs text-slate-400 mt-3 leading-relaxed">
+            신청 후 표시되는 주문번호로 처리 상태를 조회할 수 있어요.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-[1fr_.9fr] gap-6">
+      <form id="premiumForm" class="glass rounded-[2rem] p-5 md:p-7 shadow-xl shadow-slate-200/40 fade-up">
+        <div class="mb-6">
+          <h2 class="text-2xl font-black tracking-tight mb-2">신청 정보 입력</h2>
+          <p class="text-sm text-slate-500">
+            프리미엄을 적용할 디스코드 사용자 ID를 정확히 입력해주세요.
+          </p>
+        </div>
+
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-black text-slate-700 mb-2">
+              디스코드 사용자 ID <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="discordUserId"
+              type="text"
+              inputmode="numeric"
+              placeholder="예: 123456789012345678"
+              class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500"
+              required
+            />
+            <p class="mt-2 text-xs text-slate-400 leading-relaxed">
+              복사 방법: Discord 설정 → 개발자 → 개발자 모드 ON → 내 프로필 우클릭/길게 누르기 → 사용자 ID 복사
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-black text-slate-700 mb-2">
+              입금자명 <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="depositorName"
+              type="text"
+              placeholder="예: 홍길동"
+              class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500"
+              required
+            />
+            <p class="mt-2 text-xs text-slate-400 leading-relaxed">
+              실제 입금자명과 다르면 확인이 지연될 수 있어요.
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-black text-slate-700 mb-3">
+              요금제 선택 <span class="text-red-500">*</span>
+            </label>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button type="button" class="plan-card active rounded-3xl border-2 border-indigo-500 bg-white p-5 text-left" data-plan="1개월" data-price="4900">
+                <p class="text-xs font-black text-indigo-600 mb-2">BASIC</p>
+                <h3 class="text-xl font-black">1개월</h3>
+                <p class="mt-2 text-2xl font-black">4,900원</p>
+              </button>
+
+              <button type="button" class="plan-card rounded-3xl border-2 border-slate-200 bg-white p-5 text-left" data-plan="6개월" data-price="24900">
+                <p class="text-xs font-black text-emerald-600 mb-2">POPULAR</p>
+                <h3 class="text-xl font-black">6개월</h3>
+                <p class="mt-2 text-2xl font-black">24,900원</p>
+              </button>
+
+              <button type="button" class="plan-card rounded-3xl border-2 border-slate-200 bg-white p-5 text-left" data-plan="12개월" data-price="44900">
+                <p class="text-xs font-black text-amber-600 mb-2">BEST</p>
+                <h3 class="text-xl font-black">12개월</h3>
+                <p class="mt-2 text-2xl font-black">44,900원</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="rounded-3xl bg-indigo-50 border border-indigo-100 p-5">
+            <p class="text-sm font-black text-indigo-700 mb-2">신청 전 확인</p>
+            <ul class="text-sm text-indigo-900/80 leading-relaxed space-y-1">
+              <li>구매 신청 후 표시되는 계좌로 정확한 금액을 입금해주세요.</li>
+              <li>주문번호는 상태 조회에 필요하니 꼭 저장해주세요.</li>
+              <li>같은 브라우저에서는 주문번호가 자동 저장되어 상태가 자동 조회됩니다.</li>
+            </ul>
+          </div>
+
+          <button
+            id="submitBtn"
+            type="submit"
+            class="w-full rounded-3xl bg-slate-950 text-white py-4 text-base font-black hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            결제하기
+          </button>
+        </div>
+      </form>
+
+      <aside class="space-y-6">
+        <section class="glass rounded-[2rem] p-5 md:p-7 shadow-xl shadow-slate-200/40 fade-up">
+          <p class="text-xs font-black tracking-[0.16em] text-slate-400 uppercase mb-3">
+            Selected Plan
+          </p>
+
+          <h2 id="selectedPlanTitle" class="text-3xl font-black tracking-tight">1개월</h2>
+          <p id="selectedPlanPrice" class="mt-2 text-4xl font-black text-indigo-600">4,900원</p>
+
+          <div class="mt-6 rounded-3xl bg-white border border-slate-100 p-5">
+            <p class="text-sm font-black text-slate-800 mb-2">처리 기준</p>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              입금 확인 후 관리자 확인을 거쳐 <b>주문 후 24시간 이내</b> 프리미엄 등록을 완료해드려요.
+            </p>
+          </div>
+        </section>
+
+        <section class="glass rounded-[2rem] p-5 md:p-7 shadow-xl shadow-slate-200/40 fade-up">
+          <div class="mb-5">
+            <p class="text-xs font-black tracking-[0.16em] text-slate-400 uppercase mb-3">
+              Order Status
+            </p>
+            <h2 class="text-2xl font-black tracking-tight">주문 처리 상황 확인</h2>
+            <p class="mt-2 text-sm text-slate-500">
+              같은 브라우저에서는 최근 주문이 자동으로 표시돼요.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              id="orderIdInput"
+              type="text"
+              placeholder="주문번호 입력"
+              class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500"
+            />
+            <button
+              id="lookupBtn"
+              type="button"
+              class="rounded-2xl bg-indigo-600 text-white px-5 py-3 text-sm font-black hover:opacity-90 transition shrink-0"
+            >
+              조회
+            </button>
+          </div>
+
+          <div id="statusBox" class="mt-5 rounded-3xl bg-slate-50 border border-slate-100 p-5">
+            <p class="text-sm text-slate-400 font-bold">
+              아직 조회된 주문이 없어요.
+            </p>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script type="module">
+const paymentModal = document.getElementById("paymentModal");
+
+document
+  .getElementById("closePaymentModal")
+  .addEventListener("click", () => {
+    paymentModal.classList.add("hidden");
+    paymentModal.classList.remove("flex");
+  });
+
+document
+  .getElementById("confirmPaymentBtn")
+  .addEventListener("click", () => {
+    paymentModal.classList.add("hidden");
+    paymentModal.classList.remove("flex");
+  });
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      doc,
+      updateDoc,
+      onSnapshot,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const BANK_INFO = {
+      bank: "토스뱅크",
+      account: "1002-5014-0449",
+      holder: "코어드랩"
+    };
+
+    const firebaseConfig = {
+      apiKey: "7cbb43acef7fabda7bab284b317b06c2c56a4c39",
+      authDomain: "imyeontest.firebaseapp.com",
+      projectId: "imyeontest",
+      storageBucket: "imyeontest.firebasestorage.app",
+      appId: "1:55529187023:web:de07ae1f7ce459e36079ba"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const STORAGE_KEY = "musicbotPremiumLastOrderId";
+
+    const plans = {
+      "1개월": {
+        price: 4900,
+        label: "노래봇 프리미엄 1개월"
+      },
+      "6개월": {
+        price: 24900,
+        label: "노래봇 프리미엄 6개월"
+      },
+      "12개월": {
+        price: 44900,
+        label: "노래봇 프리미엄 12개월"
+      }
+    };
+
+    let selectedPlan = "1개월";
+    let unsubscribeOrder = null;
+
+    const premiumForm = document.getElementById("premiumForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const paymentBox = document.getElementById("paymentBox");
+
+    const discordUserId = document.getElementById("discordUserId");
+    const depositorName = document.getElementById("depositorName");
+
+    const selectedPlanTitle = document.getElementById("selectedPlanTitle");
+    const selectedPlanPrice = document.getElementById("selectedPlanPrice");
+
+    const orderIdInput = document.getElementById("orderIdInput");
+    const lookupBtn = document.getElementById("lookupBtn");
+    const statusBox = document.getElementById("statusBox");
+
+    document.querySelectorAll(".plan-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        selectedPlan = card.dataset.plan;
+
+        document.querySelectorAll(".plan-card").forEach((item) => {
+          item.classList.remove("active", "border-indigo-500");
+          item.classList.add("border-slate-200");
+        });
+
+        card.classList.add("active", "border-indigo-500");
+        card.classList.remove("border-slate-200");
+
+        selectedPlanTitle.textContent = selectedPlan;
+        selectedPlanPrice.textContent = `${Number(plans[selectedPlan].price).toLocaleString("ko-KR")}원`;
+      });
+    });
+
+    premiumForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const userId = discordUserId.value.trim();
+      const depositor = depositorName.value.trim();
+
+      if (!userId) {
+        showSimpleStatus("error", "디스코드 사용자 ID를 입력해주세요.");
+        discordUserId.focus();
+        return;
+      }
+
+      if (!/^\d{15,25}$/.test(userId)) {
+        showSimpleStatus("error", "디스코드 사용자 ID는 보통 15자리 이상의 숫자예요. 다시 확인해주세요.");
+        discordUserId.focus();
+        return;
+      }
+
+      if (!depositor) {
+        showSimpleStatus("error", "입금자명을 입력해주세요.");
+        depositorName.focus();
+        return;
+      }
+
+      const plan = plans[selectedPlan];
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "신청 접수 중...";
+
+      try {
+        const docRef = await addDoc(collection(db, "purchaseRequests"), {
+          category: "purchase",
+
+          companyName: `Discord ID: ${userId}`,
+          depositorName: depositor,
+          templateName: plan.label,
+          totalPrice: plan.price,
+          supportOption: false,
+          deliveryEmail: "-",
+          phoneNumber: "-",
+          domainName: userId,
+          memo: [
+            `디스코드 사용자 ID: ${userId}`,
+            `입금자명: ${depositor}`,
+            `요금제: ${plan.label}`,
+            `입금액: ${plan.price}`
+          ].join("\n"),
+          deliveryPolicy: "주문 후 24시간 이내 관리자 확인 후 프리미엄 수동 등록",
+
+          requestType: "musicbot_premium",
+          orderNumber: "",
+          discordUserId: userId,
+          plan: selectedPlan,
+          planLabel: plan.label,
+          price: plan.price,
+
+          status: "입금 확인중",
+          createdAt: serverTimestamp(),
+          createdAtClient: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+
+        await updateDoc(doc(db, "purchaseRequests", docRef.id), {
+          orderNumber: docRef.id,
+          updatedAt: new Date().toISOString()
+        });
+
+        localStorage.setItem(STORAGE_KEY, docRef.id);
+
+        premiumForm.reset();
+        selectedPlan = "1개월";
+        resetPlanCards();
+
+        showPaymentInfo({
+          orderId: docRef.id,
+          planLabel: plan.label,
+          price: plan.price,
+          depositorName: depositor
+        });
+
+        watchOrder(docRef.id);
+      } catch (error) {
+        console.error(error);
+        showSimpleStatus("error", "신청 접수 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "결제하기";
+      }
+    });
+
+    lookupBtn.addEventListener("click", () => {
+      const orderId = orderIdInput.value.trim();
+
+      if (!orderId) {
+        showSimpleStatus("error", "주문번호를 입력해주세요.");
+        return;
+      }
+
+      localStorage.setItem(STORAGE_KEY, orderId);
+      watchOrder(orderId);
+    });
+
+    function watchOrder(orderId) {
+      if (unsubscribeOrder) {
+        unsubscribeOrder();
+        unsubscribeOrder = null;
+      }
+
+      orderIdInput.value = orderId;
+
+      statusBox.innerHTML = `
+        <p class="text-sm font-black text-slate-700">주문 정보를 불러오는 중...</p>
+      `;
+
+      unsubscribeOrder = onSnapshot(
+        doc(db, "purchaseRequests", orderId),
+        (snapshot) => {
+          if (!snapshot.exists()) {
+            statusBox.innerHTML = `
+              <p class="text-sm font-black text-red-600 mb-1">주문을 찾을 수 없어요.</p>
+              <p class="text-sm text-slate-500">주문번호를 다시 확인해주세요.</p>
+            `;
+            return;
+          }
+
+          renderOrderStatus({
+            id: snapshot.id,
+            ...snapshot.data()
+          });
+        },
+        (error) => {
+          console.error(error);
+          statusBox.innerHTML = `
+            <p class="text-sm font-black text-red-600 mb-1">조회 중 오류가 발생했어요.</p>
+            <p class="text-sm text-slate-500">잠시 후 다시 시도해주세요.</p>
+          `;
+        }
+      );
+    }
+
+    function renderOrderStatus(order) {
+      const status = order.status || "입금 확인중";
+      const badgeClass = getStatusClass(status);
+
+      statusBox.innerHTML = `
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div>
+              <p class="text-xs font-black tracking-[0.14em] text-slate-400 uppercase mb-2">ORDER</p>
+              <h3 class="text-xl font-black break-all">${escapeHtml(order.id)}</h3>
+            </div>
+            <span class="status-badge ${badgeClass}">${escapeHtml(status)}</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="rounded-2xl bg-white border border-slate-100 p-4">
+              <p class="text-xs text-slate-400 font-bold mb-1">요금제</p>
+              <p class="text-sm font-black text-slate-800">${escapeHtml(order.planLabel || order.templateName || "-")}</p>
+            </div>
+
+            <div class="rounded-2xl bg-white border border-slate-100 p-4">
+              <p class="text-xs text-slate-400 font-bold mb-1">입금액</p>
+              <p class="text-sm font-black text-slate-800">${formatWon(order.price || order.totalPrice)}</p>
+            </div>
+
+            <div class="rounded-2xl bg-white border border-slate-100 p-4">
+              <p class="text-xs text-slate-400 font-bold mb-1">디스코드 사용자 ID</p>
+              <p class="text-sm font-black text-slate-800 break-all">${escapeHtml(order.discordUserId || order.domainName || "-")}</p>
+            </div>
+
+            <div class="rounded-2xl bg-white border border-slate-100 p-4">
+              <p class="text-xs text-slate-400 font-bold mb-1">입금자명</p>
+              <p class="text-sm font-black text-slate-800">${escapeHtml(order.depositorName || "-")}</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-indigo-50 border border-indigo-100 p-4">
+            <p class="text-sm font-black text-indigo-700 mb-1">${getStatusTitle(status)}</p>
+            <p class="text-sm text-indigo-900/80 leading-relaxed">${getStatusDescription(status)}</p>
+          </div>
+        </div>
+      `;
+    }
+
+function showPaymentInfo({ orderId, planLabel, price }) {
+  const modal = document.getElementById("paymentModal");
+
+  document.getElementById("modalBankName").textContent =
+    BANK_INFO.bank;
+
+  document.getElementById("modalBankAccount").textContent =
+    BANK_INFO.account;
+
+  document.getElementById("modalBankHolder").textContent =
+    `예금주 : ${BANK_INFO.holder}`;
+
+  document.getElementById("modalOrderId").textContent =
+    orderId;
+
+  document.getElementById("modalPrice").textContent =
+    `${formatWon(price)} · ${planLabel}`;
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+    function resetPlanCards() {
+      document.querySelectorAll(".plan-card").forEach((item) => {
+        item.classList.remove("active", "border-indigo-500");
+        item.classList.add("border-slate-200");
+      });
+
+      const firstPlan = document.querySelector('[data-plan="1개월"]');
+      firstPlan.classList.add("active", "border-indigo-500");
+      firstPlan.classList.remove("border-slate-200");
+
+      selectedPlanTitle.textContent = "1개월";
+      selectedPlanPrice.textContent = "4,900원";
+    }
+
+    function showSimpleStatus(type, message) {
+      statusBox.innerHTML = `
+        <p class="text-sm font-black ${type === "error" ? "text-red-600" : "text-emerald-600"} mb-1">
+          ${type === "error" ? "확인 필요" : "완료"}
+        </p>
+        <p class="text-sm text-slate-500">${escapeHtml(message)}</p>
+      `;
+    }
+
+    function getStatusClass(status) {
+      if (status === "입금 확인중") return "status-wait";
+      if (status === "입금 확인 완료") return "status-paid";
+      if (status === "작업 중") return "status-work";
+      if (status === "전송완료") return "status-done";
+      return "status-etc";
+    }
+
+    function getStatusTitle(status) {
+      if (status === "입금 확인중") return "입금 확인을 기다리고 있어요.";
+      if (status === "입금 확인 완료") return "입금 확인이 완료되었어요.";
+      if (status === "작업 중") return "프리미엄 등록을 진행 중이에요.";
+      if (status === "전송완료") return "프리미엄 등록이 완료되었어요.";
+      return "주문 상태가 업데이트되었어요.";
+    }
+
+    function getStatusDescription(status) {
+      if (status === "입금 확인중") {
+        return "입금자명과 신청 정보를 확인한 뒤 다음 단계로 진행됩니다.";
+      }
+
+      if (status === "입금 확인 완료") {
+        return "관리자가 입금을 확인했습니다. 곧 프리미엄 등록을 진행합니다.";
+      }
+
+      if (status === "작업 중") {
+        return "봇에 프리미엄 권한을 등록하고 있습니다. 잠시만 기다려 주세요.";
+      }
+
+      if (status === "전송완료") {
+        return "등록이 완료되었습니다. 디스코드에서 /내프리미엄 명령어로 확인해 주세요.";
+      }
+
+      return "자세한 내용은 관리자에게 문의해 주세요.";
+    }
+
+    function formatWon(value) {
+      return `${Number(value || 0).toLocaleString("ko-KR")}원`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[ch]));
+    }
+
+    const savedOrderId = localStorage.getItem(STORAGE_KEY);
+    if (savedOrderId) {
+      watchOrder(savedOrderId);
+    }
+  </script>
+<!-- 결제 안내 팝업 -->
+<div
+  id="paymentModal"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+>
+  <div
+    class="w-full max-w-lg rounded-[2rem] bg-white p-7 shadow-2xl fade-up"
+  >
+    <div class="flex items-start justify-between gap-4 mb-6">
+      <div>
+        <p class="text-sm font-black text-indigo-600 mb-2">
+          구매 신청 완료
+        </p>
+
+        <h2 class="text-3xl font-black tracking-tight leading-tight">
+          아래 계좌로<br />
+          입금해주세요
+        </h2>
+      </div>
+
+      <button
+        id="closePaymentModal"
+        class="rounded-2xl bg-slate-100 px-3 py-2 text-sm font-black text-slate-500 hover:bg-slate-200 transition"
+      >
+        닫기
+      </button>
+    </div>
+
+    <div class="rounded-3xl bg-slate-950 text-white p-5 mb-5">
+      <p class="text-xs text-slate-400 font-bold mb-2">
+        입금 계좌
+      </p>
+
+      <div class="space-y-1">
+        <p id="modalBankName" class="text-lg font-black"></p>
+        <p id="modalBankAccount" class="text-2xl font-black tracking-wide"></p>
+        <p id="modalBankHolder" class="text-sm text-slate-300"></p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-3 mb-5">
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs font-black text-slate-400 mb-1">주문번호</p>
+        <p
+          id="modalOrderId"
+          class="text-sm font-black text-slate-800 break-all"
+        ></p>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs font-black text-slate-400 mb-1">입금 금액</p>
+        <p
+          id="modalPrice"
+          class="text-sm font-black text-slate-800"
+        ></p>
+      </div>
+
+      <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+        <p class="text-sm font-black text-amber-700 mb-2">
+          안내 사항
+        </p>
+
+        <ul class="space-y-2 text-sm text-amber-900/90 leading-relaxed">
+          <li>
+            • 입금자명이 다르면 처리 시간이 오래 걸릴 수 있어요.
+          </li>
+
+          <li>
+            • 주문번호는 혹시 모르니 메모장에 적어두는 걸 추천드려요.
+          </li>
+
+          <li>
+            • 주문 후 24시간 이내 처리 완료를 기준으로 진행돼요.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <button
+      id="confirmPaymentBtn"
+      class="w-full rounded-3xl bg-indigo-600 text-white py-4 text-base font-black hover:opacity-90 transition"
+    >
+      확인했어요
+    </button>
+  </div>
+</div>
+</body>
+</html>
