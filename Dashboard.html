@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>서연 음악 대시보드</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #f0f3f8;
+      --surface-3: #e7ecf4;
+      --text: #172033;
+      --muted: #667085;
+      --line: #d9e0ea;
+      --accent: #6d5dfc;
+      --accent-2: #00a3a3;
+      --accent-3: #ff7a59;
+      --danger: #e5484d;
+      --success: #19a974;
+      --shadow: 0 24px 70px rgba(27, 39, 68, 0.13);
+      --radius: 8px;
+      --sidebar: 300px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(109, 93, 252, 0.16), transparent 30%),
+        radial-gradient(circle at 92% 18%, rgba(0, 163, 163, 0.13), transparent 28%),
+        linear-gradient(135deg, #ffffff 0%, #f6f8fc 45%, #edf3fb 100%);
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.52;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .auth-gate {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+    }
+
+    .auth-panel {
+      width: min(560px, 100%);
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(217, 224, 234, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 34px;
+      backdrop-filter: blur(18px);
+    }
+
+    .brand-mark {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      color: #ffffff;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      margin-bottom: 22px;
+    }
+
+    .auth-panel h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 48px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .auth-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .primary-btn,
+    .secondary-btn,
+    .icon-btn,
+    .chip-btn {
+      height: 42px;
+      border-radius: var(--radius);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .primary-btn {
+      min-width: 156px;
+      padding: 0 18px;
+      color: #ffffff;
+      background: var(--accent);
+      font-weight: 800;
+    }
+
+    .secondary-btn {
+      min-width: 124px;
+      padding: 0 16px;
+      color: var(--text);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      font-weight: 750;
+    }
+
+    .icon-btn {
+      width: 42px;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .icon-btn.danger {
+      color: #ffffff;
+      background: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .app-shell {
+      height: 100%;
+      display: grid;
+      grid-template-columns: var(--sidebar) 1fr;
+      padding: 18px;
+      gap: 18px;
+    }
+
+    .sidebar,
+    .main-panel {
+      min-height: 0;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(217, 224, 234, 0.92);
+      border-radius: var(--radius);
+      box-shadow: 0 18px 45px rgba(27, 39, 68, 0.08);
+      backdrop-filter: blur(18px);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .user-card {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+
+    .avatar,
+    .guild-icon,
+    .track-art {
+      object-fit: cover;
+      background: var(--surface-3);
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+    }
+
+    .user-name,
+    .guild-name,
+    .track-title,
+    .queue-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-name {
+      font-size: 15px;
+      font-weight: 850;
+    }
+
+    .user-meta,
+    .guild-meta,
+    .muted,
+    .queue-meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section-title {
+      margin: 22px 4px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .guild-list,
+    .node-list {
+      display: grid;
+      gap: 8px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .guild-btn,
+    .node-btn {
+      width: 100%;
+      min-height: 56px;
+      display: grid;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      color: var(--text);
+      background: transparent;
+      border: 1px solid transparent;
+      text-align: left;
+    }
+
+    .guild-btn {
+      grid-template-columns: 40px 1fr;
+    }
+
+    .guild-btn.active,
+    .node-btn.active {
+      background: var(--surface);
+      border-color: var(--line);
+      box-shadow: 0 8px 24px rgba(27, 39, 68, 0.08);
+    }
+
+    .guild-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+    }
+
+    .node-btn {
+      grid-template-columns: 1fr auto;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+      background: rgba(109, 93, 252, 0.1);
+      border: 1px solid rgba(109, 93, 252, 0.16);
+    }
+
+    .pill.green {
+      color: var(--success);
+      background: rgba(25, 169, 116, 0.1);
+      border-color: rgba(25, 169, 116, 0.16);
+    }
+
+    .main-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(260px, 620px) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-box {
+      height: 50px;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 8px 0 14px;
+      box-shadow: 0 10px 30px rgba(27, 39, 68, 0.08);
+    }
+
+    .search-box input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font-weight: 750;
+    }
+
+    .search-box input::placeholder {
+      color: #8b96a8;
+    }
+
+    .search-results {
+      position: absolute;
+      inset-inline: 0;
+      top: calc(100% + 10px);
+      z-index: 20;
+      max-height: min(520px, calc(100vh - 150px));
+      overflow: auto;
+      padding: 8px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .search-item,
+    .queue-item {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      border-radius: var(--radius);
+      color: var(--text);
+      background: transparent;
+      text-align: left;
+    }
+
+    .search-item:hover,
+    .queue-item:hover {
+      background: var(--surface-2);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .content-grid {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(340px, 520px);
+      gap: 18px;
+      padding: 18px;
+      overflow: hidden;
+    }
+
+    .player-zone,
+    .queue-zone {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: hidden;
+    }
+
+    .now-card,
+    .control-card,
+    .queue-card,
+    .status-card {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 16px 38px rgba(27, 39, 68, 0.08);
+    }
+
+    .now-card {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(18px, 4vw, 36px);
+    }
+
+    .album-shell {
+      width: min(420px, 100%);
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .album-art {
+      width: min(360px, 72vw);
+      aspect-ratio: 1;
+      border-radius: 24px;
+      object-fit: cover;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 122, 89, 0.92), transparent 22%),
+        radial-gradient(circle at 70% 30%, rgba(109, 93, 252, 0.88), transparent 26%),
+        radial-gradient(circle at 38% 70%, rgba(0, 163, 163, 0.86), transparent 24%),
+        linear-gradient(135deg, #ffffff, #dfe7f3);
+      box-shadow: 0 30px 70px rgba(27, 39, 68, 0.18);
+    }
+
+    .track-heading {
+      width: 100%;
+      display: grid;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .track-heading h2 {
+      margin: 0;
+      min-width: 0;
+      font-size: clamp(26px, 4vw, 42px);
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+      letter-spacing: 0;
+    }
+
+    .track-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--surface-3);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.2s ease;
+    }
+
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .control-card {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .transport-row,
+    .volume-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .transport-row .icon-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      font-size: 18px;
+      background: var(--surface);
+    }
+
+    .transport-row .play-btn {
+      width: 68px;
+      height: 68px;
+      color: #ffffff;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 18px 34px rgba(109, 93, 252, 0.3);
+    }
+
+    .volume-row input {
+      width: min(260px, 62vw);
+      accent-color: var(--accent);
+    }
+
+    .queue-card {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .queue-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .queue-head h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .queue-list {
+      min-height: 0;
+      overflow: auto;
+      padding: 8px;
+    }
+
+    .track-art {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+    }
+
+    .status-card {
+      padding: 14px 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .empty {
+      min-height: 160px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      padding: 18px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      max-width: min(420px, calc(100vw - 36px));
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: #172033;
+      color: #ffffff;
+      box-shadow: var(--shadow);
+      font-weight: 750;
+    }
+
+    @media (max-width: 1100px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        min-height: 100%;
+        height: auto;
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        max-height: none;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+        overflow: visible;
+      }
+
+      .main-panel,
+      .queue-card,
+      .player-zone,
+      .queue-zone {
+        overflow: visible;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-shell {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: stretch;
+      }
+
+      .top-actions > * {
+        flex: 1;
+      }
+
+      .content-grid {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .search-item,
+      .queue-item {
+        grid-template-columns: 44px 1fr;
+      }
+
+      .queue-item .queue-meta,
+      .search-item .queue-meta {
+        grid-column: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section id="authGate" class="auth-gate">
+    <div class="auth-panel">
+      <div class="brand-mark">서</div>
+      <h1>서연 음악 대시보드</h1>
+      <p>
+        Discord OAuth2로 로그인한 뒤 서버를 선택하고, 웹에서 노래 검색과 재생 제어를 사용할 수 있어요.
+        검색은 백엔드가 Lavalink 노드에 위임하는 API를 기준으로 연결됩니다.
+      </p>
+      <div class="auth-actions">
+        <button id="loginButton" class="primary-btn">Discord로 로그인</button>
+        <button id="previewButton" class="secondary-btn" type="button">화면 미리보기</button>
+      </div>
+      <p id="authHint" class="muted" style="margin-top: 18px;"></p>
+    </div>
+  </section>
+
+  <main id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="user-card">
+        <img id="userAvatar" class="avatar" alt="" />
+        <div>
+          <div id="userName" class="user-name">로그인 확인 중</div>
+          <div id="userMeta" class="user-meta">Discord OAuth2</div>
+        </div>
+        <button id="logoutButton" class="icon-btn" title="로그아웃" type="button">↗</button>
+      </div>
+
+      <div class="section-title">서버</div>
+      <div id="guildList" class="guild-list"></div>
+
+      <div class="section-title">재생 노드</div>
+      <div id="nodeList" class="node-list"></div>
+    </aside>
+
+    <section class="main-panel">
+      <header class="topbar">
+        <div class="search-wrap">
+          <div class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="음악 검색하기" autocomplete="off" />
+            <button id="searchButton" class="secondary-btn" type="button">검색</button>
+          </div>
+          <div id="searchResults" class="search-results hidden"></div>
+        </div>
+
+        <div class="top-actions">
+          <span id="selectedGuildLabel" class="pill">서버 선택 필요</span>
+          <button id="refreshButton" class="icon-btn" title="새로고침" type="button">⟳</button>
+        </div>
+      </header>
+
+      <div class="content-grid">
+        <section class="player-zone">
+          <article class="now-card">
+            <div class="album-shell">
+              <img id="albumArt" class="album-art" alt="" />
+              <div class="track-heading">
+                <h2 id="trackTitle">재생 중인 노래가 없어요</h2>
+                <p id="trackAuthor">검색창에서 노래를 추가해 주세요</p>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress" aria-label="재생 진행률">
+                  <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div class="time-row">
+                  <span id="positionText">00:00</span>
+                  <span id="durationText">00:00</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="control-card">
+            <div class="transport-row">
+              <button id="leaveButton" class="icon-btn" title="나가기" type="button">↩</button>
+              <button id="skipButton" class="icon-btn" title="스킵" type="button">⏭</button>
+              <button id="pauseButton" class="icon-btn play-btn" title="재생/일시정지" type="button">⏸</button>
+              <button id="stopButton" class="icon-btn danger" title="정지" type="button">⏹</button>
+              <button id="queueRefreshButton" class="icon-btn" title="대기열 새로고침" type="button">☰</button>
+            </div>
+            <div class="volume-row">
+              <span class="muted">볼륨</span>
+              <input id="volumeSlider" type="range" min="0" max="150" step="5" value="60" />
+              <span id="volumeText" class="pill">60%</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="queue-zone">
+          <article class="queue-card">
+            <div class="queue-head">
+              <h2>대기열</h2>
+              <span id="queueCount" class="pill green">0곡</span>
+            </div>
+            <div id="queueList" class="queue-list"></div>
+          </article>
+
+          <article class="status-card">
+            <div class="status-line">
+              <span>현재 서버</span>
+              <strong id="guildStatus">선택 안 됨</strong>
+            </div>
+            <div class="status-line">
+              <span>음성 채널</span>
+              <strong id="voiceStatus">확인 중</strong>
+            </div>
+            <div class="status-line">
+              <span>노드 정책</span>
+              <strong id="nodePolicyStatus">자동 선택</strong>
+            </div>
+          </article>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script>
+    window.SEOYEON_DASHBOARD_CONFIG = {
+      apiBaseUrl: "https://coredlab.cloud/dashboard"
+    };
+  </script>
+
+  <script>
+    const CONFIG = {
+      apiBaseUrl: window.SEOYEON_DASHBOARD_CONFIG?.apiBaseUrl || getDefaultApiBaseUrl(),
+      loginPath: window.SEOYEON_DASHBOARD_CONFIG?.loginPath || "/api/auth/discord/login",
+      logoutPath: window.SEOYEON_DASHBOARD_CONFIG?.logoutPath || "/api/auth/discord/logout",
+      mePath: window.SEOYEON_DASHBOARD_CONFIG?.mePath || "/api/auth/discord/me",
+      guildsPath: window.SEOYEON_DASHBOARD_CONFIG?.guildsPath || "/api/dashboard/guilds",
+      allowPreview: window.SEOYEON_DASHBOARD_CONFIG?.allowPreview ?? true,
+      refreshMs: 8000
+    };
+
+    const state = {
+      me: null,
+      guilds: [],
+      selectedGuildId: null,
+      music: null,
+      preview: new URLSearchParams(location.search).get("preview") === "1",
+      refreshTimer: null,
+      searchTimer: null
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    const el = {
+      authGate: $("authGate"),
+      appShell: $("appShell"),
+      loginButton: $("loginButton"),
+      previewButton: $("previewButton"),
+      authHint: $("authHint"),
+      userAvatar: $("userAvatar"),
+      userName: $("userName"),
+      userMeta: $("userMeta"),
+      logoutButton: $("logoutButton"),
+      guildList: $("guildList"),
+      nodeList: $("nodeList"),
+      selectedGuildLabel: $("selectedGuildLabel"),
+      searchInput: $("searchInput"),
+      searchButton: $("searchButton"),
+      searchResults: $("searchResults"),
+      refreshButton: $("refreshButton"),
+      albumArt: $("albumArt"),
+      trackTitle: $("trackTitle"),
+      trackAuthor: $("trackAuthor"),
+      progressFill: $("progressFill"),
+      positionText: $("positionText"),
+      durationText: $("durationText"),
+      pauseButton: $("pauseButton"),
+      skipButton: $("skipButton"),
+      stopButton: $("stopButton"),
+      leaveButton: $("leaveButton"),
+      queueRefreshButton: $("queueRefreshButton"),
+      volumeSlider: $("volumeSlider"),
+      volumeText: $("volumeText"),
+      queueList: $("queueList"),
+      queueCount: $("queueCount"),
+      guildStatus: $("guildStatus"),
+      voiceStatus: $("voiceStatus"),
+      nodePolicyStatus: $("nodePolicyStatus"),
+      toast: $("toast")
+    };
+
+    boot();
+
+    function boot() {
+      bindEvents();
+
+      if (state.preview) {
+        loadPreview();
+        return;
+      }
+
+      checkSession();
+    }
+
+    function getDefaultApiBaseUrl() {
+      if (location.origin && location.origin !== "null") {
+        const dashboardBase = getDashboardBasePath();
+
+        if (dashboardBase) {
+          return `${location.origin}${dashboardBase}`;
+        }
+
+        return location.origin;
+      }
+
+      return "http://localhost:4000";
+    }
+
+    function getDashboardBasePath() {
+      const pathname = location.pathname.replace(/\/+$/, "");
+
+      if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+        return "/dashboard";
+      }
+
+      return "";
+    }
+
+    function bindEvents() {
+      el.loginButton.addEventListener("click", () => {
+        const redirect = encodeURIComponent(location.href.split("?")[0]);
+        location.href = `${CONFIG.apiBaseUrl}${CONFIG.loginPath}?redirect=${redirect}`;
+      });
+
+      el.previewButton.addEventListener("click", () => {
+        state.preview = true;
+        loadPreview();
+      });
+
+      el.logoutButton.addEventListener("click", async () => {
+        if (state.preview) {
+          location.href = location.pathname;
+          return;
+        }
+
+        await apiFetch(CONFIG.logoutPath, {
+          method: "POST"
+        }).catch(() => null);
+        location.reload();
+      });
+
+      el.refreshButton.addEventListener("click", () => refreshAll(true));
+      el.queueRefreshButton.addEventListener("click", () => refreshMusicState(true));
+      el.searchButton.addEventListener("click", () => runSearch());
+
+      el.searchInput.addEventListener("input", () => {
+        clearTimeout(state.searchTimer);
+        state.searchTimer = setTimeout(runSearch, 320);
+      });
+
+      el.searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          runSearch();
+        }
+
+        if (event.key === "Escape") {
+          hideSearchResults();
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".search-wrap")) {
+          hideSearchResults();
+        }
+      });
+
+      el.pauseButton.addEventListener("click", () => sendControl("pause_resume"));
+      el.skipButton.addEventListener("click", () => sendControl("skip"));
+      el.stopButton.addEventListener("click", () => sendControl("stop"));
+      el.leaveButton.addEventListener("click", () => sendControl("leave"));
+
+      el.volumeSlider.addEventListener("change", () => {
+        sendControl("volume", {
+          volume: Number(el.volumeSlider.value)
+        });
+      });
+    }
+
+    async function checkSession() {
+      try {
+        const me = await apiFetch(CONFIG.mePath);
+        state.me = me.user ?? me;
+        showApp();
+        await refreshAll();
+      } catch (error) {
+        showAuth(error.message);
+      }
+    }
+
+    function showAuth(message = "") {
+      el.authGate.classList.remove("hidden");
+      el.appShell.classList.add("hidden");
+      el.authHint.textContent = message
+        ? `API 세션 확인 실패: ${message}`
+        : "";
+    }
+
+    function showApp() {
+      el.authGate.classList.add("hidden");
+      el.appShell.classList.remove("hidden");
+      renderUser();
+      startRefreshLoop();
+    }
+
+    async function refreshAll(force = false) {
+      if (state.preview) {
+        renderPreview();
+        return;
+      }
+
+      try {
+        await loadGuilds();
+        await refreshMusicState(force);
+      } catch (error) {
+        toast(`대시보드 갱신 실패: ${error.message}`);
+      }
+    }
+
+    async function loadGuilds() {
+      const data = await apiFetch(CONFIG.guildsPath);
+      state.guilds = data.guilds ?? data ?? [];
+
+      if (!state.selectedGuildId && state.guilds[0]) {
+        state.selectedGuildId = state.guilds[0].id;
+      }
+
+      renderGuilds();
+    }
+
+    async function refreshMusicState(force = false) {
+      if (!state.selectedGuildId) return;
+
+      const data = await apiFetch(guildPath(`/music/state${force ? "?force=1" : ""}`));
+      state.music = data;
+      renderMusicState();
+    }
+
+    async function runSearch() {
+      const query = el.searchInput.value.trim();
+      if (!query || !state.selectedGuildId) {
+        hideSearchResults();
+        return;
+      }
+
+      if (state.preview) {
+        renderSearchResults(makePreviewSearch(query));
+        return;
+      }
+
+      try {
+        const data = await apiFetch(guildPath(`/music/search?q=${encodeURIComponent(query)}&limit=10&nodePolicy=fastest-available`));
+        renderSearchResults((data.results ?? data.tracks ?? []).slice(0, 10));
+      } catch (error) {
+        renderSearchMessage(`검색 실패: ${error.message}`);
+      }
+    }
+
+    async function addTrack(track) {
+      if (!state.selectedGuildId) return;
+
+      const query = track.uri ?? track.url ?? track.title ?? el.searchInput.value.trim();
+      if (!query) return;
+
+      hideSearchResults();
+      el.searchInput.value = "";
+
+      if (state.preview) {
+        toast("미리보기 모드에서는 실제 재생 요청을 보내지 않아요.");
+        return;
+      }
+
+      try {
+        await apiFetch(guildPath("/music/play"), {
+          method: "POST",
+          body: {
+            query,
+            source: "dashboard",
+            nodePolicy: "fastest-available",
+            preferPremium: Boolean(state.me?.premium)
+          }
+        });
+        toast("대기열에 추가했어요.");
+        await refreshMusicState(true);
+      } catch (error) {
+        toast(`노래 추가 실패: ${error.message}`);
+      }
+    }
+
+    async function sendControl(action, extra = {}) {
+      if (!state.selectedGuildId) return;
+
+      if (state.preview) {
+        applyPreviewControl(action, extra);
+        return;
+      }
+
+      try {
+        await apiFetch(guildPath("/music/control"), {
+          method: "POST",
+          body: {
+            action,
+            ...extra
+          }
+        });
+        await refreshMusicState(true);
+      } catch (error) {
+        toast(`컨트롤 실패: ${error.message}`);
+      }
+    }
+
+    function renderUser() {
+      const user = state.me ?? {};
+      el.userName.textContent = user.displayName ?? user.globalName ?? user.username ?? "서연 유저";
+      el.userMeta.textContent = user.premium ? "프리미엄 사용자" : "일반 사용자";
+      el.userAvatar.src = user.avatarUrl ?? makeAvatarPlaceholder(user.username ?? "S");
+    }
+
+    function renderGuilds() {
+      el.guildList.innerHTML = "";
+
+      if (!state.guilds.length) {
+        el.guildList.innerHTML = `<div class="empty">봇과 함께 있는 서버가 없어요.</div>`;
+        return;
+      }
+
+      for (const guild of state.guilds) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `guild-btn ${guild.id === state.selectedGuildId ? "active" : ""}`;
+        button.innerHTML = `
+          ${guild.iconUrl ? `<img class="guild-icon" alt="" src="${escapeAttr(guild.iconUrl)}">` : `<div class="guild-icon">${escapeHtml((guild.name ?? "?").slice(0, 1))}</div>`}
+          <div>
+            <div class="guild-name">${escapeHtml(guild.name ?? "이름 없는 서버")}</div>
+            <div class="guild-meta">${guild.memberCount ? `${formatNumber(guild.memberCount)}명` : "음악 제어 가능"}</div>
+          </div>
+        `;
+        button.addEventListener("click", async () => {
+          state.selectedGuildId = guild.id;
+          renderGuilds();
+          await refreshMusicState(true);
+        });
+        el.guildList.appendChild(button);
+      }
+    }
+
+    function renderMusicState() {
+      const music = state.music ?? {};
+      const guild = state.guilds.find((item) => item.id === state.selectedGuildId) ?? music.guild ?? {};
+      const current = music.current ?? music.track ?? null;
+      const player = music.player ?? {};
+      const queue = Array.isArray(music.queue) ? music.queue : [];
+      const node = music.node ?? {};
+
+      el.selectedGuildLabel.textContent = guild.name ?? "서버 선택됨";
+      el.guildStatus.textContent = guild.name ?? "확인 불가";
+      el.voiceStatus.textContent = music.voiceChannel?.name ?? music.voiceChannelName ?? "음성 채널 확인 필요";
+      el.nodePolicyStatus.textContent = node.name
+        ? `${node.name}${node.type === "premium" ? " / 프리미엄" : " / 무료"}`
+        : "자동 선택";
+
+      if (current) {
+        el.trackTitle.textContent = current.title ?? "제목 없음";
+        el.trackAuthor.textContent = current.author ?? current.artist ?? "알 수 없음";
+        el.albumArt.src = current.artworkUrl ?? current.thumbnail ?? makeAlbumPlaceholder(current.title);
+      } else {
+        el.trackTitle.textContent = "재생 중인 노래가 없어요";
+        el.trackAuthor.textContent = "검색창에서 노래를 추가해 주세요";
+        el.albumArt.src = makeAlbumPlaceholder("서연");
+      }
+
+      const duration = Number(current?.duration ?? current?.length ?? player.duration ?? 0);
+      const position = Number(player.position ?? music.position ?? 0);
+      const percent = duration > 0 ? Math.max(0, Math.min(100, position / duration * 100)) : 0;
+
+      el.progressFill.style.width = `${percent}%`;
+      el.positionText.textContent = formatDuration(position);
+      el.durationText.textContent = formatDuration(duration);
+      el.pauseButton.textContent = player.paused ? "▶" : "⏸";
+      el.volumeSlider.value = Number(player.volume ?? music.volume ?? 60);
+      el.volumeText.textContent = `${el.volumeSlider.value}%`;
+
+      renderQueue(queue);
+      renderNodes(music.nodes ?? []);
+    }
+
+    function renderQueue(queue) {
+      el.queueCount.textContent = `${queue.length}곡`;
+      el.queueList.innerHTML = "";
+
+      if (!queue.length) {
+        el.queueList.innerHTML = `<div class="empty">대기열이 비어 있어요.</div>`;
+        return;
+      }
+
+      for (const [index, track] of queue.entries()) {
+        const item = document.createElement("div");
+        item.className = "queue-item";
+        item.innerHTML = `
+          <img class="track-art" alt="" src="${escapeAttr(track.artworkUrl ?? track.thumbnail ?? makeAlbumPlaceholder(track.title))}">
+          <div>
+            <div class="queue-title">${index + 1}. ${escapeHtml(track.title ?? "제목 없음")}</div>
+            <div class="queue-meta">${escapeHtml(track.author ?? track.artist ?? "알 수 없음")}</div>
+          </div>
+          <div class="queue-meta">${formatDuration(track.duration ?? track.length ?? 0)}</div>
+        `;
+        el.queueList.appendChild(item);
+      }
+    }
+
+    function renderNodes(nodes) {
+      el.nodeList.innerHTML = "";
+
+      if (!nodes.length) {
+        const active = state.music?.node;
+        if (active?.name) {
+          nodes = [active];
+        }
+      }
+
+      if (!nodes.length) {
+        el.nodeList.innerHTML = `<div class="empty">노드 정보 없음</div>`;
+        return;
+      }
+
+      for (const node of nodes) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `node-btn ${node.selected || node.id === state.music?.node?.id ? "active" : ""}`;
+        button.innerHTML = `
+          <div>
+            <div class="guild-name">${escapeHtml(node.name ?? node.id ?? "노드")}</div>
+            <div class="guild-meta">${escapeHtml(node.type === "premium" ? "프리미엄" : "무료")} ${node.latency ? ` · ${node.latency}ms` : ""}</div>
+          </div>
+          <span class="pill ${node.type === "premium" ? "" : "green"}">${node.connected === false ? "오프라인" : "사용 가능"}</span>
+        `;
+        button.addEventListener("click", () => selectNode(node));
+        el.nodeList.appendChild(button);
+      }
+    }
+
+    async function selectNode(node) {
+      if (!state.selectedGuildId || !node.id) return;
+
+      if (state.preview) {
+        toast("미리보기 모드에서는 노드 변경을 저장하지 않아요.");
+        return;
+      }
+
+      try {
+        await apiFetch(guildPath("/music/node"), {
+          method: "POST",
+          body: {
+            nodeId: node.id
+          }
+        });
+        await refreshMusicState(true);
+      } catch (error) {
+        toast(`노드 변경 실패: ${error.message}`);
+      }
+    }
+
+    function renderSearchResults(results) {
+      if (!results.length) {
+        renderSearchMessage("검색 결과가 없어요.");
+        return;
+      }
+
+      el.searchResults.innerHTML = "";
+      for (const track of results.slice(0, 10)) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "search-item";
+        button.innerHTML = `
+          <img class="track-art" alt="" src="${escapeAttr(track.artworkUrl ?? track.thumbnail ?? makeAlbumPlaceholder(track.title))}">
+          <div>
+            <div class="queue-title">${escapeHtml(track.title ?? "제목 없음")}</div>
+            <div class="queue-meta">${escapeHtml(track.author ?? track.artist ?? "알 수 없음")}</div>
+          </div>
+          <div class="queue-meta">${formatDuration(track.duration ?? track.length ?? 0)}</div>
+        `;
+        button.addEventListener("click", () => addTrack(track));
+        el.searchResults.appendChild(button);
+      }
+
+      el.searchResults.classList.remove("hidden");
+    }
+
+    function renderSearchMessage(message) {
+      el.searchResults.innerHTML = `<div class="empty">${escapeHtml(message)}</div>`;
+      el.searchResults.classList.remove("hidden");
+    }
+
+    function hideSearchResults() {
+      el.searchResults.classList.add("hidden");
+    }
+
+    async function apiFetch(path, options = {}) {
+      const response = await fetch(path.startsWith("http") ? path : `${CONFIG.apiBaseUrl}${path}`, {
+        method: options.method ?? "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers ?? {})
+        },
+        body: options.body ? JSON.stringify(options.body) : undefined
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || data?.ok === false) {
+        throw new Error(data?.message || `${response.status} ${response.statusText}`);
+      }
+
+      return data ?? {};
+    }
+
+    function guildPath(path) {
+      return `/api/dashboard/guilds/${encodeURIComponent(state.selectedGuildId)}${path}`;
+    }
+
+    function startRefreshLoop() {
+      clearInterval(state.refreshTimer);
+      state.refreshTimer = setInterval(() => {
+        if (!document.hidden && state.selectedGuildId && !state.preview) {
+          refreshMusicState().catch(() => null);
+        }
+      }, CONFIG.refreshMs);
+    }
+
+    function toast(message) {
+      el.toast.textContent = message;
+      el.toast.classList.remove("hidden");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => el.toast.classList.add("hidden"), 3200);
+    }
+
+    function loadPreview() {
+      state.me = {
+        username: "시유",
+        displayName: "시유",
+        premium: true,
+        avatarUrl: makeAvatarPlaceholder("시")
+      };
+      state.guilds = [
+        {
+          id: "preview",
+          name: "서연 테스트 서버",
+          memberCount: 128
+        }
+      ];
+      state.selectedGuildId = "preview";
+      showApp();
+      renderPreview();
+    }
+
+    function renderPreview() {
+      state.music = {
+        guild: state.guilds[0],
+        voiceChannelName: "음악 감상방",
+        node: {
+          id: "premium-main",
+          name: "프리미엄 1번 서버",
+          type: "premium",
+          latency: 42
+        },
+        nodes: [
+          {
+            id: "premium-main",
+            name: "프리미엄 1번 서버",
+            type: "premium",
+            latency: 42,
+            selected: true
+          },
+          {
+            id: "free-auto-1",
+            name: "1번 무료 노드",
+            type: "free",
+            latency: 485
+          }
+        ],
+        player: {
+          paused: false,
+          position: 67000,
+          volume: 70
+        },
+        current: {
+          title: "Supernatural",
+          author: "NewJeans",
+          duration: 211000,
+          artworkUrl: makeAlbumPlaceholder("Supernatural")
+        },
+        queue: [
+          {
+            title: "TOO BAD (feat. Anderson .Paak)",
+            author: "G-DRAGON, Anderson .Paak",
+            duration: 153000
+          },
+          {
+            title: "Boom Boom Bass",
+            author: "RIIZE",
+            duration: 152000
+          },
+          {
+            title: "Cherish (My Love)",
+            author: "ILLIT",
+            duration: 176000
+          }
+        ]
+      };
+      renderGuilds();
+      renderMusicState();
+    }
+
+    function applyPreviewControl(action, extra) {
+      if (!state.music) return;
+
+      if (action === "pause_resume") {
+        state.music.player.paused = !state.music.player.paused;
+      }
+
+      if (action === "stop" || action === "leave") {
+        state.music.current = null;
+        state.music.queue = [];
+        state.music.player.position = 0;
+      }
+
+      if (action === "skip") {
+        state.music.current = state.music.queue.shift() ?? null;
+        state.music.player.position = 0;
+      }
+
+      if (action === "volume") {
+        state.music.player.volume = extra.volume;
+      }
+
+      renderMusicState();
+    }
+
+    function makePreviewSearch(query) {
+      return [
+        {
+          title: `${query} Official Audio`,
+          author: "Lavalink Search",
+          duration: 184000
+        },
+        {
+          title: `${query} Live Clip`,
+          author: "YouTube",
+          duration: 221000
+        },
+        {
+          title: `${query} Playlist Mix`,
+          author: "Search Result",
+          duration: 198000
+        }
+      ];
+    }
+
+    function makeAvatarPlaceholder(seed) {
+      const text = encodeURIComponent(String(seed ?? "S").slice(0, 2));
+      return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='48' fill='%236d5dfc'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='32' font-weight='800' fill='white'%3E${text}%3C/text%3E%3C/svg%3E`;
+    }
+
+    function makeAlbumPlaceholder(seed) {
+      const text = encodeURIComponent(String(seed ?? "♪").slice(0, 1));
+      return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640' viewBox='0 0 640 640'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%236d5dfc'/%3E%3Cstop offset='.52' stop-color='%2300a3a3'/%3E%3Cstop offset='1' stop-color='%23ff7a59'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='640' rx='48' fill='url(%23g)'/%3E%3Ccircle cx='320' cy='320' r='164' fill='rgba(255,255,255,.88)'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='140' font-weight='900' fill='%23172033'%3E${text}%3C/text%3E%3C/svg%3E`;
+    }
+
+    function formatDuration(ms) {
+      const totalSeconds = Math.max(0, Math.floor(Number(ms || 0) / 1000));
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      if (hours > 0) {
+        return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function formatNumber(value) {
+      return Number(value).toLocaleString("ko-KR");
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+  </script>
+</body>
+</html>
